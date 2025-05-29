@@ -1,5 +1,6 @@
-package com.example.management.common;
+package com.example.management.common.log;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Builder;
 import lombok.Data;
@@ -13,6 +14,7 @@ import java.util.Map;
 public class ApiLogModel {
     private String traceId;
     private String type; // REQUEST or RESPONSE
+    @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
     private LocalDateTime timestamp;
     private String httpMethod;
     private String requestUri;

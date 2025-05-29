@@ -32,3 +32,4 @@ springdoc:
     csrf:
       enabled: true
 
+

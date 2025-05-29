@@ -1,4 +1,4 @@
-package com.example.ManagementLibrary.logging;
+package com.example.management.common.log;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;

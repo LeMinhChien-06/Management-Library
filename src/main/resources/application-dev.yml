@@ -19,7 +19,14 @@ open:
 
 # Cấu hình logging cho dev
 logging:
+  pattern:
+    console: "%clr(%d{dd/MM/yyyy HH:mm:ss}){faint} %clr(%5p) %clr(${PID:- }){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n%wEx"
+    file: "%d{dd/MM/yyyy HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+  file:
+    name: logs/application.log
   level:
     root: INFO
-    org.springframework.web: DEBUG
-    com.example.management: DEBUG
+    com.example.management: INFO
+    org.springframework.web: INFO
+    org.hibernate: INFO
+
