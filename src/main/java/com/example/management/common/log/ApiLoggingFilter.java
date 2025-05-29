@@ -71,7 +71,6 @@ public class ApiLoggingFilter extends OncePerRequestFilter {
             // Extract request body if available
             Object body = null;
             if (request.getContentLength() > 0) {
-                // We need to read content first before logging as it's not available yet
                 body = extractRequestBody(request);
             }
             
