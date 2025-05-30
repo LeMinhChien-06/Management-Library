@@ -1,4 +1,115 @@
 package com.example.management.exception;
 
+import com.example.management.constants.MessageCode;
+import com.example.management.dto.response.ApiResponse;
+import jakarta.validation.ConstraintViolation;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
+import org.springframework.web.servlet.NoHandlerFoundException;
+import jakarta.validation.ConstraintViolationException;
+
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Slf4j
+@RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    @ExceptionHandler(MethodArgumentNotValidException.class) // bắt validation
+    public ResponseEntity<ApiResponse<Void>> handleValidationException(MethodArgumentNotValidException ex, WebRequest request) {
+
+        List<String> errors = ex.getBindingResult()
+                .getFieldErrors()
+                .stream()
+                .map(FieldError::getDefaultMessage)
+                .collect(Collectors.toList());
+
+        ApiResponse<Void> response = ApiResponse.error(
+                MessageCode.VALIDATION_ERROR,
+                errors,
+                request.getDescription(false)
+        );
+
+        log.error("Validation error: {}", errors);
+        return ResponseEntity.status(MessageCode.VALIDATION_ERROR.getStatusCode()).body(response);
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<ApiResponse<Void>> handleConstraintViolationException(
+            ConstraintViolationException ex, WebRequest request) {
+
+        List<String> errors = ex.getConstraintViolations()
+                .stream()
+                .map(ConstraintViolation::getMessage)
+                .collect(Collectors.toList());
+
+        ApiResponse<Void> response = ApiResponse.error(
+                MessageCode.VALIDATION_ERROR,
+                errors,
+                request.getDescription(false)
+        );
+
+        log.warn("Constraint violation: {}", errors);
+        return ResponseEntity.status(MessageCode.VALIDATION_ERROR.getStatusCode()).body(response);
+    }
+
+    @ExceptionHandler(AppException.class)
+    public ResponseEntity<ApiResponse<Void>> handleAppException(
+            AppException ex, WebRequest request) {
+
+        ApiResponse<Void> response = ApiResponse.error(
+                ex.getMessageCode(),
+                request.getDescription(false)
+        );
+
+        log.warn("App exception: {} - {}", ex.getErrorCode(), ex.getMessage());
+        return ResponseEntity.status(ex.getStatusCode()).body(response);
+    }
+
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    public ResponseEntity<ApiResponse<Void>> handleMethodNotSupportedException(
+            HttpRequestMethodNotSupportedException ex, WebRequest request) {
+
+        ApiResponse<Void> response = ApiResponse.error(
+                MessageCode.METHOD_NOT_ALLOWED,
+                request.getDescription(false)
+        );
+
+        log.warn("Method not allowed: {}", ex.getMethod());
+        return ResponseEntity.status(MessageCode.METHOD_NOT_ALLOWED.getStatusCode()).body(response);
+    }
+
+    @ExceptionHandler(NoHandlerFoundException.class)
+    public ResponseEntity<ApiResponse<Void>> handleNoHandlerFoundException(
+            NoHandlerFoundException ex, WebRequest request) {
+
+        ApiResponse<Void> response = ApiResponse.error(
+                MessageCode.ENDPOINT_NOT_FOUND,
+                request.getDescription(false)
+        );
+
+        log.warn("Endpoint not found: {}", ex.getRequestURL());
+        return ResponseEntity.status(MessageCode.ENDPOINT_NOT_FOUND.getStatusCode()).body(response);
+    }
+
+    @ExceptionHandler(Exception.class) // Bắt tất cả exception chưa được xử lý
+    public ResponseEntity<ApiResponse<Void>> handleGenericException(
+            Exception ex, WebRequest request) {
+
+        ApiResponse<Void> response = ApiResponse.error(
+                MessageCode.INTERNAL_SERVER_ERROR,
+                request.getDescription(false)
+        );
+
+        log.error("Unexpected error: ", ex);
+        return ResponseEntity.status(MessageCode.INTERNAL_SERVER_ERROR.getStatusCode()).body(response);
+    }
+
 }
