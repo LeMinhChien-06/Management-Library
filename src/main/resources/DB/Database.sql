@@ -66,10 +66,32 @@ CREATE TABLE user_logs
     user_id     BIGINT       NOT NULL,
     action      VARCHAR(100) NOT NULL,
     entity_type VARCHAR(50),
-    user_agent VARCHAR(100),
+    user_agent  VARCHAR(100),
     entity_id   BIGINT,
     details     TEXT,
     ip_address  VARCHAR(45),
     created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users (id)
+);
+
+-- User sessions table
+CREATE TABLE user_sessions
+(
+    session_id       VARCHAR(36) PRIMARY KEY,
+    username         VARCHAR(50) NOT NULL,
+    created_at       TIMESTAMP   NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    expires_at       TIMESTAMP   NOT NULL,
+    active           BOOLEAN     NOT NULL DEFAULT TRUE,
+    ip_address       VARCHAR(45),
+    user_agent       VARCHAR(500),
+    device_info      VARCHAR(100),
+    last_accessed_at TIMESTAMP,
+
+    INDEX            idx_username_active (username, active),
+    INDEX            idx_session_id_active (session_id, active),
+    INDEX            idx_expires_at (expires_at),
+    INDEX            idx_created_at (created_at),
+
+    FOREIGN KEY (username) REFERENCES users (username)
+        ON DELETE CASCADE ON UPDATE CASCADE
 );

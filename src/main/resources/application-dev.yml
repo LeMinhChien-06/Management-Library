@@ -10,12 +10,16 @@ spring:
     hibernate:
       ddl-auto: none
 
+jwt:
+  signerKey: "JRuSzhqIwpOXPL/C8O+4tsXdcYr8TCAm7i99Bq59Qbe5I6yOCJo5LUSUcSfKNoaQ"
+  valid-duration: 1
+
 server:
   port: 8080
 
 open:
   api:
-    serverUrl: http://localhost:${server.port}
+    serverUrl: http://localhost:${server.port}/api
 
 # Cấu hình logging cho dev
 logging:

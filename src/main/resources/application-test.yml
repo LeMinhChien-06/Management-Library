@@ -15,7 +15,7 @@ server:
 
 open:
   api:
-    serverUrl: http://localhost:${server.port}
+    serverUrl: http://localhost:${server.port}/api
 
 # Cấu hình logging cho test
 logging:
