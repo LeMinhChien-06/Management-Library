@@ -26,6 +26,7 @@ public enum MessageCode {
     PASSWORD_RESET_SUCCESS("MSG_PASSWORD_RESET_SUCCESS", "Khôi phục mật khẩu thành công", 200),
     EMAIL_VERIFIED_SUCCESS("MSG_EMAIL_VERIFIED_SUCCESS", "Xác thực email thành công", 200),
 
+
     // FILE OPERATION SUCCESS MESSAGES (2xx)
     FILE_UPLOAD_SUCCESS("MSG_FILE_UPLOAD_SUCCESS", "Tải file lên thành công", 201),
     FILE_DELETE_SUCCESS("MSG_FILE_DELETE_SUCCESS", "Xóa file thành công", 200),
@@ -46,15 +47,20 @@ public enum MessageCode {
     INVALID_PHONE("ERR_INVALID_PHONE", "Định dạng số điện thoại không hợp lệ", 400),
     PASSWORD_TOO_SHORT("ERR_PASSWORD_TOO_SHORT", "Mật khẩu phải có ít nhất 8 ký tự", 400),
     PASSWORD_TOO_WEAK("ERR_PASSWORD_TOO_WEAK", "Mật khẩu phải chứa ít nhất một chữ hoa, chữ thường và số", 400),
+    PASSWORD_INVALID("MSG_PASSWORD_INVALID", "Mật khẩu không hợp lệ", 400),
     INVALID_DATE_FORMAT("ERR_INVALID_DATE_FORMAT", "Định dạng ngày tháng không hợp lệ", 400),
     INVALID_NUMBER_FORMAT("ERR_INVALID_NUMBER_FORMAT", "Định dạng số không hợp lệ", 400),
+    DATA_NULL_ERROR("ERR_DATA_NULL", "Dữ liệu không được truyền vào", 400),
+
 
     // AUTH ERROR MESSAGES (401)
     UNAUTHORIZED("ERR_UNAUTHORIZED", "Chưa xác thực", 401),
     INVALID_CREDENTIALS("ERR_INVALID_CREDENTIALS", "Thông tin đăng nhập không chính xác", 401),
     TOKEN_EXPIRED("ERR_TOKEN_EXPIRED", "Token đã hết hạn", 401),
     TOKEN_INVALID("ERR_TOKEN_INVALID", "Token không hợp lệ", 401),
+    TOKEN_NOT_CREATED("ERR_TOKEN_NOT_CREATED", "Token không được tạo", 401),
     SESSION_EXPIRED("ERR_SESSION_EXPIRED", "Phiên đăng nhập đã hết hạn", 401),
+
 
     // FORBIDDEN ERROR MESSAGES (403)
     FORBIDDEN("ERR_FORBIDDEN", "Không có quyền truy cập", 403),

@@ -1,7 +1,6 @@
-package com.example.springboot_3.entity;
+package com.example.management.entity;
 
 import jakarta.persistence.Entity;
-
 import jakarta.persistence.Id;
 import lombok.*;
 import lombok.experimental.FieldDefaults;

@@ -1,10 +1,10 @@
-package com.example.springboot_3.config;
+package com.example.management.config;
 
-import com.example.springboot_3.entity.User;
-import com.example.springboot_3.enums.Roles;
-import com.example.springboot_3.repository.UserRepository;
+import com.example.management.entity.User;
+import com.example.management.enums.Role;
+import com.example.management.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,21 +14,23 @@ import java.util.HashSet;
 
 @Slf4j
 @Configuration
+@RequiredArgsConstructor
 public class ApplicationInitConfig {
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
     @Bean
     ApplicationRunner applicationRunner(UserRepository userRepository) {
         return args -> {
             if (userRepository.findByUsername("admin").isEmpty()) {
-                var roles = new HashSet<String>();
-                roles.add(Roles.ADMIN.name());
+//                var roles = new HashSet<String>();
+//                roles.add(Role.ADMIN.name());
                 User user = User.builder()
                         .username("admin")
+                        .fullName("chien dep trai")
+                        .email("minh@gmail.com")
                         .password(passwordEncoder.encode("admin"))
-//                        .roles(roles)
+                        .role(Role.ADMIN)
                         .build();
 
                 userRepository.save(user);

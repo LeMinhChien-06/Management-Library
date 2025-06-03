@@ -36,5 +36,9 @@ public class UserExceptions {
         return new AppException(MessageCode.ACCOUNT_LOCKED);
     }
 
+    public static  AppException passwordInvalid() {
+        return new AppException(MessageCode.PASSWORD_INVALID);
+    }
+
 
 }

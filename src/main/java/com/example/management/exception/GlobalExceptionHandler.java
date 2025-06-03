@@ -2,9 +2,11 @@ package com.example.management.exception;
 
 import com.example.management.constants.MessageCode;
 import com.example.management.dto.response.ApiResponse;
+import com.example.management.exception.auth.AuthenticationExceptions;
 import jakarta.validation.ConstraintViolation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -98,6 +100,18 @@ public class GlobalExceptionHandler {
         log.warn("Endpoint not found: {}", ex.getRequestURL());
         return ResponseEntity.status(MessageCode.ENDPOINT_NOT_FOUND.getStatusCode()).body(response);
     }
+
+    @ExceptionHandler(NullPointerException.class)
+    public ResponseEntity<ApiResponse<Void>> handleNullPointerExceptions(NullPointerException ex, WebRequest request) {
+        ApiResponse<Void> response = ApiResponse.error(
+                MessageCode.DATA_NULL_ERROR,
+                request.getDescription(false)
+        );
+
+        log.error("Null pointer exception: ", ex);
+        return ResponseEntity.status(MessageCode.DATA_NULL_ERROR.getStatusCode()).body(response);
+    }
+
 
     @ExceptionHandler(Exception.class) // Bắt tất cả exception chưa được xử lý
     public ResponseEntity<ApiResponse<Void>> handleGenericException(

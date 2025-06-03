@@ -1,6 +1,7 @@
 package com.example.management.dto.response;
 
 import com.example.management.constants.MessageCode;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -22,6 +23,8 @@ public class ApiResponse<T> {
     String message;
     T data;
     List<String> errors;
+    String error;
+    @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
     LocalDateTime timestamp;
     String path;
     Integer statusCode;
@@ -49,6 +52,10 @@ public class ApiResponse<T> {
 
     public static <T> ApiResponse<T> success(T data){
         return success(MessageCode.SUCCESS, data);
+    }
+
+    public static <T>ApiResponse<T> success(){
+        return success(MessageCode.SUCCESS);
     }
 
     public static <T> ApiResponse<T> error(MessageCode messageCode) {
@@ -94,6 +101,7 @@ public class ApiResponse<T> {
                 .timestamp(LocalDateTime.now())
                 .build();
     }
+
 
     // Backward compatibility methods
     public static <T> ApiResponse<T> error(String message) {
