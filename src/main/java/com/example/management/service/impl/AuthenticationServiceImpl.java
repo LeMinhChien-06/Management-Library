@@ -5,10 +5,12 @@ import com.example.management.dto.request.LogoutRequest;
 import com.example.management.dto.response.LoginResponse;
 import com.example.management.entity.InvalidatedToken;
 import com.example.management.entity.User;
+import com.example.management.entity.UserSession;
 import com.example.management.exception.auth.AuthenticationExceptions;
 import com.example.management.exception.user.UserExceptions;
 import com.example.management.repository.InvalidatedTokenRepository;
 import com.example.management.repository.UserRepository;
+import com.example.management.repository.UserSessionRepository;
 import com.example.management.service.AuthenticationService;
 import com.nimbusds.jose.*;
 import com.nimbusds.jose.crypto.MACSigner;
@@ -25,6 +27,8 @@ import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
 import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.UUID;
@@ -36,6 +40,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     private final UserRepository userRepository;
     private final InvalidatedTokenRepository invalidatedTokenRepository;
+    private final UserSessionRepository userSessionRepository;
 
     @NonFinal
     @Value("${jwt.valid-duration}")
@@ -61,8 +66,18 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         if (!authenticated)
             throw UserExceptions.passwordInvalid();
 
+        userSessionRepository.deactivateAllSessionsForUser(user.getUsername());
+        log.info("Deactivated all previous sessions for user: {}", user.getUsername());
+
+        String newToken = generateToken(user);
+
+        saveUserSession(user.getUsername(), newToken);
+
+        log.info("User {} logged in successfully with new session", user.getUsername());
+
+
         return LoginResponse.builder()
-                .token(generateToken(user))
+                .token(newToken)
                 .build();
     }
 
@@ -106,6 +121,14 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .build();
 
         invalidatedTokenRepository.save(invalidatedToken);
+
+        userSessionRepository.findById(jwt).ifPresent(session -> {
+            session.setActive(false);
+            userSessionRepository.save(session);
+        });
+
+        log.info(" User logged out, session deactivated: {}", jwt);
+
     }
 
     @Override
@@ -119,9 +142,46 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         if (!(verify && expirationTime.after(new Date())))
             throw AuthenticationExceptions.tokenExpired();
 
-        if (invalidatedTokenRepository.existsById(signedJWT.getJWTClaimsSet().getJWTID()))
+        String jwtId = signedJWT.getJWTClaimsSet().getJWTID();
+
+        // check backlist
+        if (invalidatedTokenRepository.existsById(jwtId))
             throw AuthenticationExceptions.tokenInvalid();
+
+        if (!userSessionRepository.existsBySessionIdAndActiveTrue(jwtId)) {
+            throw AuthenticationExceptions.tokenInvalid();
+        }
+
 
         return signedJWT;
     }
+
+    /**
+     * Lưu session mới vào database
+     */
+    private void saveUserSession(String username, String token, String ipAddress, String userAgent) {
+        try {
+            SignedJWT signedJWT = SignedJWT.parse(token);
+            String jwtId = signedJWT.getJWTClaimsSet().getJWTID();
+            Date expirationTime = signedJWT.getJWTClaimsSet().getExpirationTime();
+
+            UserSession session = UserSession.builder()
+                    .sessionId(jwtId)
+                    .username(username)
+                    .createdAt(LocalDateTime.now())
+                    .expiresAt(expirationTime.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime())
+                    .ipAddress(ipAddress)
+                    .userAgent(userAgent)
+                    .active(true)
+                    .build();
+
+            userSessionRepository.save(session);
+            log.info(" Saved new session for user: {}", username);
+
+        } catch (ParseException e) {
+            log.error("Error parsing token for session storage", e);
+            throw new RuntimeException("Failed to save user session", e);
+        }
+    }
+
 }
