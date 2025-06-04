@@ -71,6 +71,13 @@ CREATE TABLE user_logs
     details     TEXT,
     ip_address  VARCHAR(45),
     created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    INDEX       idx_user_logs_user_id (user_id),
+    INDEX       idx_user_logs_action (action),
+    INDEX       idx_user_logs_entity (entity_type, entity_id),
+    INDEX       idx_user_logs_created_at (created_at),
+
+
     FOREIGN KEY (user_id) REFERENCES users (id)
 );
 
