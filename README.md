@@ -10,3 +10,7 @@ Sử lý ngoại lệ ở tất cả class GlobalHandlerException
 ## Login:
 1. ## **Session Management Pattern**
 
+## Logging audit (Production)
+**hybrid approach** kết hợp **Enum + @TrackAction + Strategy Pattern**
+
+
