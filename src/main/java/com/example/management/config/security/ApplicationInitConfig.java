@@ -1,4 +1,4 @@
-package com.example.management.config;
+package com.example.management.config.security;
 
 import com.example.management.entity.User;
 import com.example.management.enums.Role;
@@ -9,8 +9,6 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
-import java.util.HashSet;
 
 @Slf4j
 @Configuration

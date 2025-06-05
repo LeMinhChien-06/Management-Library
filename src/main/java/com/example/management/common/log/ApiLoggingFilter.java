@@ -26,8 +26,7 @@ public class ApiLoggingFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
-        
-        // Skip logging for specific endpoints (like actuator)
+
         if (shouldSkip(request)) {
             filterChain.doFilter(request, response);
             return;
@@ -40,21 +39,15 @@ public class ApiLoggingFilter extends OncePerRequestFilter {
         long startTime = System.currentTimeMillis();
         
         try {
-            // Log request
             logRequest(requestWrapper, traceId);
-            
-            // Process the request
             filterChain.doFilter(requestWrapper, responseWrapper);
         } catch (Exception e) {
-            // Log exception if it occurs
             logException(requestWrapper, traceId, e);
             throw e;
         } finally {
-            // Log response
             long duration = System.currentTimeMillis() - startTime;
             logResponse(requestWrapper, responseWrapper, traceId, duration);
             
-            // Copy response body back - this is necessary because we've consumed it for logging
             responseWrapper.copyBodyToResponse();
         }
     }
@@ -68,13 +61,11 @@ public class ApiLoggingFilter extends OncePerRequestFilter {
     
     private void logRequest(ContentCachingRequestWrapper request, String traceId) {
         try {
-            // Extract request body if available
             Object body = null;
             if (request.getContentLength() > 0) {
                 body = extractRequestBody(request);
             }
             
-            // Build request log model
             ApiLogModel logModel = ApiLogModel.builder()
                     .traceId(traceId)
                     .type("REQUEST")
@@ -88,7 +79,6 @@ public class ApiLoggingFilter extends OncePerRequestFilter {
                     .body(body)
                     .build();
             
-            // Log as structured JSON
             log.info(objectMapper.writeValueAsString(logModel));
         } catch (Exception e) {
             log.error("Error logging request: {}", e.getMessage(), e);
@@ -98,10 +88,8 @@ public class ApiLoggingFilter extends OncePerRequestFilter {
     private void logResponse(ContentCachingRequestWrapper request, ContentCachingResponseWrapper response, 
                             String traceId, long duration) {
         try {
-            // Extract response body
             Object responseBody = extractResponseBody(response);
             
-            // Build response log model
             ApiLogModel logModel = ApiLogModel.builder()
                     .traceId(traceId)
                     .type("RESPONSE")
@@ -113,8 +101,7 @@ public class ApiLoggingFilter extends OncePerRequestFilter {
                     .headers(getResponseHeaders(response))
                     .body(responseBody)
                     .build();
-            
-            // Log as structured JSON
+
             log.info(objectMapper.writeValueAsString(logModel));
         } catch (Exception e) {
             log.error("Error logging response: {}", e.getMessage(), e);
@@ -191,7 +178,6 @@ public class ApiLoggingFilter extends OncePerRequestFilter {
         Enumeration<String> headerNames = request.getHeaderNames();
         while (headerNames.hasMoreElements()) {
             String headerName = headerNames.nextElement();
-            // Skip sensitive headers
             if (!headerName.equalsIgnoreCase("Authorization") && !headerName.equalsIgnoreCase("Cookie")) {
                 headers.put(headerName, request.getHeader(headerName));
             }

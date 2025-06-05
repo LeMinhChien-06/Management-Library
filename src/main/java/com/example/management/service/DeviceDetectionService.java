@@ -9,6 +9,4 @@ public interface DeviceDetectionService {
     String extractDeviceInfo(String userAgent);
 
     String extractBrowserInfo(String userAgent);
-
-
 }

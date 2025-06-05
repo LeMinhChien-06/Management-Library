@@ -12,15 +12,19 @@ import com.example.management.repository.InvalidatedTokenRepository;
 import com.example.management.repository.UserRepository;
 import com.example.management.repository.UserSessionRepository;
 import com.example.management.service.AuthenticationService;
+import com.example.management.service.DeviceDetectionService;
+import com.example.management.service.UserLogService;
 import com.nimbusds.jose.*;
 import com.nimbusds.jose.crypto.MACSigner;
 import com.nimbusds.jose.crypto.MACVerifier;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.NonFinal;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpRequest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -41,6 +45,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final UserRepository userRepository;
     private final InvalidatedTokenRepository invalidatedTokenRepository;
     private final UserSessionRepository userSessionRepository;
+    private final UserLogService userLogService;
+    private final DeviceDetectionService deviceDetectionService;
 
     @NonFinal
     @Value("${jwt.valid-duration}")
@@ -51,30 +57,31 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     protected String SIGNER_KEY;
 
     @Override
-    public LoginResponse login(LoginRequest request) {
+    public LoginResponse login(LoginRequest request, HttpServletRequest httpRequest) {
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
-        var user = userRepository.findByUsername(request.getUsername())
+        var user = userRepository.findByUsername(request.getUsername().trim())
                 .orElseThrow(UserExceptions::userNotFound);
 
         log.info("User {} logged in", user.getUsername());
 
-        if (!user.getActive())
+        if (!user.getActive()) // =true mới chạy vào throw
             throw UserExceptions.accountLocked();
 
-        boolean authenticated = passwordEncoder.matches(request.getPassword(), user.getPassword());
+        boolean authenticated = passwordEncoder.matches(request.getPassword().trim(), user.getPassword().trim());
 
-        if (!authenticated)
+        if (!authenticated) {
             throw UserExceptions.passwordInvalid();
+        }
 
-        userSessionRepository.deactivateAllSessionsForUser(user.getUsername());
+        userSessionRepository.deactivateAllSessionsForUser(user.getUsername().trim());
         log.info("Deactivated all previous sessions for user: {}", user.getUsername());
 
         String newToken = generateToken(user);
+        saveUserSession(user.getUsername().trim(), newToken, httpRequest);
 
-        saveUserSession(user.getUsername(), newToken);
+        userLogService.logSuccessfulLogin(user, httpRequest);
 
         log.info("User {} logged in successfully with new session", user.getUsername());
-
 
         return LoginResponse.builder()
                 .token(newToken)
@@ -84,6 +91,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Override
     public String generateToken(User user) {
         JWSHeader header = new JWSHeader(JWSAlgorithm.HS512);
+
         JWTClaimsSet jwtClaimsSet = new JWTClaimsSet.Builder()
                 .subject(user.getUsername())
                 .issuer("management-library")
@@ -96,7 +104,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .build();
 
         Payload payload = new Payload(jwtClaimsSet.toJSONObject());
-
         JWSObject jwsObject = new JWSObject(header, payload);
 
         try {
@@ -125,6 +132,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         userSessionRepository.findById(jwt).ifPresent(session -> {
             session.setActive(false);
             userSessionRepository.save(session);
+
+            userRepository.findByUsername(session.getUsername())
+                    .ifPresent(user -> userLogService.logLogout(user, session.getIpAddress(), session.getUserAgent()));
+
         });
 
         log.info(" User logged out, session deactivated: {}", jwt);
@@ -152,18 +163,21 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             throw AuthenticationExceptions.tokenInvalid();
         }
 
-
         return signedJWT;
     }
 
     /**
      * Lưu session mới vào database
      */
-    private void saveUserSession(String username, String token, String ipAddress, String userAgent) {
+    private void saveUserSession(String username, String token, HttpServletRequest request) {
         try {
             SignedJWT signedJWT = SignedJWT.parse(token);
             String jwtId = signedJWT.getJWTClaimsSet().getJWTID();
             Date expirationTime = signedJWT.getJWTClaimsSet().getExpirationTime();
+
+            String ipAddress = deviceDetectionService.extractClientIpAddress(request);
+            String userAgent = request.getHeader("User-Agent");
+            String deviceInfo = deviceDetectionService.extractDeviceInfo(userAgent);
 
             UserSession session = UserSession.builder()
                     .sessionId(jwtId)
@@ -172,6 +186,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                     .expiresAt(expirationTime.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime())
                     .ipAddress(ipAddress)
                     .userAgent(userAgent)
+                    .deviceInfo(deviceInfo)
+                    .lastAccessedAt(LocalDateTime.now())
                     .active(true)
                     .build();
 

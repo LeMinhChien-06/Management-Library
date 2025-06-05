@@ -1,0 +1,2 @@
+1. - **JSON Structured Logging** (Log có cấu trúc JSON)
+"traceId" : UUID, dùng để theo dõi toàn bộ hành trình của một Request từ lúc bắt đầu đến lúc kết thúc.

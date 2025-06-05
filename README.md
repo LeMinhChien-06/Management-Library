@@ -9,6 +9,7 @@ Sử lý ngoại lệ ở tất cả class GlobalHandlerException
 - Sử dụng gọi theo Method reference
 ## Login:
 1. ## **Session Management Pattern**
+## Log theo dõi: AOP Audit Aspect
 
 ## Logging audit (Production)
 **hybrid approach** kết hợp **Enum + @TrackAction + Strategy Pattern**

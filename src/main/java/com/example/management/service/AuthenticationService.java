@@ -6,12 +6,14 @@ import com.example.management.dto.response.LoginResponse;
 import com.example.management.entity.User;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jwt.SignedJWT;
+import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.http.HttpRequest;
 
 import java.text.ParseException;
 
 public interface AuthenticationService {
 
-    LoginResponse login(LoginRequest request);
+    LoginResponse login(LoginRequest request, HttpServletRequest httpRequest);
 
     String generateToken(User user);
 

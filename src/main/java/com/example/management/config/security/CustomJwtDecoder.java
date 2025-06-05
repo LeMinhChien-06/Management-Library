@@ -1,12 +1,9 @@
-package com.example.management.config;
+package com.example.management.config.security;
 
 import com.example.management.exception.AppException;
-import com.example.management.exception.auth.AuthenticationExceptions;
 import com.example.management.service.impl.AuthenticationServiceImpl;
 import com.nimbusds.jose.JOSEException;
-import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Value;
 
 import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
