@@ -51,6 +51,16 @@ public enum MessageCode {
     INVALID_DATE_FORMAT("ERR_INVALID_DATE_FORMAT", "Định dạng ngày tháng không hợp lệ", 400),
     INVALID_NUMBER_FORMAT("ERR_INVALID_NUMBER_FORMAT", "Định dạng số không hợp lệ", 400),
     DATA_NULL_ERROR("ERR_DATA_NULL", "Dữ liệu không được truyền vào", 400),
+    USERNAME_NOT_EXIST("ERR_USERNAME_NOT_EXIST", "Tên đăng nhập không tồn tại", 400),
+    REQUIRED_USERNAME("ERR_REQUIRED_USERNAME", "Tên đăng nhập không được để trống", 400),
+    REQUIRED_MIN_USERNAME_MAX("ERR_REQUIRED_MIN_USERNAME_MAX", "Tên đăng nhập phải phải từ 4 đến 50 ký tự", 400),
+    REQUIRED_PASSWORD("ERR_REQUIRED_PASSWORD", "Mật khẩu không được để trống", 400),
+    REQUIRED_EMAIL("ERR_REQUIRED_EMAIL", "Email không được để trống", 400),
+    REQUIRED_PHONE("ERR_REQUIRED_PHONE", "Số điện thoại không được để trống", 400),
+    REQUIRED_FULL_NAME("ERR_REQUIRED_FULL_NAME", "Họ và tên không được để trống", 400),
+    REQUIRED_PAGE_NUMBER("ERR_REQUIRED_PAGE_NUMBER", "Số trang không được để trống", 400),
+    REQUIRED_PAGE_SIZE("ERR_REQUIRED_PAGE_SIZE", "Kích thước trang không được để trống", 400),
+    REQUIRED_SORT_FIELD("ERR_REQUIRED_SORT_FIELD", "Trường sắp xếp không được để trống", 400),
 
 
     // AUTH ERROR MESSAGES (401)

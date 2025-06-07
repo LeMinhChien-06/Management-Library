@@ -60,7 +60,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     public LoginResponse login(LoginRequest request, HttpServletRequest httpRequest) {
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
         var user = userRepository.findByUsername(request.getUsername().trim())
-                .orElseThrow(UserExceptions::userNotFound);
+                .orElseThrow(UserExceptions::usernameNotExists);
 
         log.info("User {} logged in", user.getUsername());
 

@@ -33,7 +33,6 @@ public class SecurityConfig {
 
     private static final String[] URI_ADMIN = {
             "/users/**",
-            "/books/**",
 
     };
 
@@ -43,7 +42,7 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource))
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(PUBLIC_URIS).permitAll()
-                        .requestMatchers(URI_ADMIN).hasRole(Role.ADMIN.name())
+                        .requestMatchers(URI_ADMIN).hasAnyRole(Role.ADMIN.name(), Role.USER.name())
                         .anyRequest().authenticated()
                 );
 

@@ -15,9 +15,20 @@ public class SessionCleanupTask {
 
     private final UserSessionRepository userSessionRepository;
 
-    @Scheduled(cron = "0 0 2 * * ?") // Chạy lúc 2h sáng hàng ngày
+    //    @Scheduled(cron = "0 0 2 * * ?") // Chạy lúc 2h sáng hàng ngày
+    @Scheduled(fixedRate = 300000)
     public void cleanupExpiredSessions() {
-        userSessionRepository.deleteExpiredSessions(LocalDateTime.now());
-        log.info(" Cleaned up expired sessions at {}", LocalDateTime.now());
+        try {
+            LocalDateTime now = LocalDateTime.now();
+            int deletedCount = userSessionRepository.deleteExpiredSessions(now);
+
+            if (deletedCount > 0) {
+                log.info("Cleaned up {} expired sessions at {}", deletedCount, now);
+            }
+
+        } catch (Exception e) {
+            log.error("Error during session cleanup", e);
+        }
+
     }
 }

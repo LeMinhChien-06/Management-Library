@@ -15,38 +15,38 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class User extends BaseEntity{
+public class User extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-     Long id;
+    Long id;
 
     @Column(unique = true, nullable = false, length = 50)
-     String username;
+    String username;
 
     @Column(nullable = false)
-     String password;
+    String password;
 
     @Column(unique = true, nullable = false, length = 100)
-     String email;
+    String email;
 
     @Column(name = "full_name", nullable = false, length = 100)
-     String fullName;
+    String fullName;
 
     @Column(length = 20)
-     String phone;
+    String phone;
 
     @Enumerated(EnumType.STRING)
-     Role role = Role.USER;
+    Role role = Role.USER;
 
     @Column(columnDefinition = "BOOLEAN DEFAULT TRUE")
-     Boolean active = true;
+    Boolean active = true;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-     List<Borrowing> borrowings;
+    List<Borrowing> borrowings;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-     List<UserLog> userLogs;
+    List<UserLog> userLogs;
 
 
 }

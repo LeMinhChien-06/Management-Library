@@ -9,6 +9,10 @@ public class UserExceptions {
         return new AppException(MessageCode.USER_NOT_FOUND);
     }
 
+    public static AppException usernameNotExists() {
+        return new AppException(MessageCode.USERNAME_NOT_EXIST);
+    }
+
     // Người dùng đã tồn tại
     public static AppException userAlreadyExists() {
         return new AppException(MessageCode.USER_ALREADY_EXISTS);
@@ -17,6 +21,11 @@ public class UserExceptions {
     // email đã tồn tại
     public static AppException emailAlreadyExists() {
         return new AppException(MessageCode.EMAIL_ALREADY_EXISTS);
+    }
+
+
+    public static AppException phoneAlreadyExists() {
+        return new AppException(MessageCode.PHONE_ALREADY_EXISTS);
     }
 
     // Tên đã tồn tại

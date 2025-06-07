@@ -3,9 +3,14 @@ package com.example.management.exception;
 import com.example.management.constants.MessageCode;
 import com.example.management.dto.response.ApiResponse;
 import com.example.management.exception.auth.AuthenticationExceptions;
+import com.example.management.utils.ValidationErrorMapper;
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
+import com.fasterxml.jackson.databind.exc.MismatchedInputException;
+import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 import jakarta.validation.ConstraintViolation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -30,7 +35,10 @@ public class GlobalExceptionHandler {
         List<String> errors = ex.getBindingResult()
                 .getFieldErrors()
                 .stream()
-                .map(FieldError::getDefaultMessage)
+                .map(fieldError -> ValidationErrorMapper.mapFieldErrors(
+                        fieldError.getField(),
+                        fieldError.getDefaultMessage()
+                ))
                 .collect(Collectors.toList());
 
         ApiResponse<Void> response = ApiResponse.error(
@@ -49,7 +57,10 @@ public class GlobalExceptionHandler {
 
         List<String> errors = ex.getConstraintViolations()
                 .stream()
-                .map(ConstraintViolation::getMessage)
+                .map(violation -> ValidationErrorMapper.mapPropertyPath(
+                        violation.getMessage(),
+                        violation.getPropertyPath().toString()
+                ))
                 .collect(Collectors.toList());
 
         ApiResponse<Void> response = ApiResponse.error(
@@ -112,6 +123,70 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(MessageCode.DATA_NULL_ERROR.getStatusCode()).body(response);
     }
 
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ApiResponse<Void>> handleHttpMessageNotReadableException(
+            HttpMessageNotReadableException ex, WebRequest request) {
+
+        String errorMessage = "Invalid JSON format";
+        List<String> errors = List.of(errorMessage);
+
+        // Kiểm tra các loại lỗi JSON phổ biến
+        Throwable cause = ex.getCause();
+        if (cause instanceof UnrecognizedPropertyException) {
+            // Lỗi field không được nhận diện
+            UnrecognizedPropertyException unrecognizedEx = (UnrecognizedPropertyException) cause;
+            String fieldName = unrecognizedEx.getPropertyName();
+            String className = unrecognizedEx.getReferringClass().getSimpleName();
+
+            // Lấy danh sách các field hợp lệ
+            String knownFields = unrecognizedEx.getKnownPropertyIds()
+                    .stream()
+                    .map(Object::toString)
+                    .collect(Collectors.joining(", "));
+
+            errorMessage = String.format("Field '%s' không được nhận diện trong %s. Các field hợp lệ: [%s]",
+                    fieldName, className, knownFields);
+            errors = List.of(errorMessage);
+
+        } else if (cause instanceof InvalidFormatException) {
+            // Lỗi format dữ liệu (như gửi string cho field number)
+            InvalidFormatException formatEx = (InvalidFormatException) cause;
+            String fieldName = formatEx.getPath().isEmpty() ? "unknown" :
+                    formatEx.getPath().get(formatEx.getPath().size() - 1).getFieldName();
+            String expectedType = formatEx.getTargetType().getSimpleName();
+            String actualValue = formatEx.getValue().toString();
+
+            errorMessage = String.format("Giá trị '%s' không hợp lệ cho field '%s'. Mong đợi kiểu dữ liệu: %s",
+                    actualValue, fieldName, expectedType);
+            errors = List.of(errorMessage);
+
+        } else if (cause instanceof MismatchedInputException) {
+            // Lỗi mismatch input (như thiếu field bắt buộc)
+            MismatchedInputException mismatchEx = (MismatchedInputException) cause;
+            String fieldPath = mismatchEx.getPath().stream()
+                    .map(ref -> ref.getFieldName())
+                    .filter(name -> name != null)
+                    .collect(Collectors.joining("."));
+
+            errorMessage = String.format("Dữ liệu đầu vào không khớp cho field: %s",
+                    fieldPath.isEmpty() ? "root" : fieldPath);
+            errors = List.of(errorMessage);
+
+        } else if (ex.getMessage().contains("JSON parse error")) {
+            // Lỗi cú pháp JSON
+            errorMessage = "Cú pháp JSON không hợp lệ. Vui lòng kiểm tra format JSON của bạn";
+            errors = List.of(errorMessage);
+        }
+
+        ApiResponse<Void> response = ApiResponse.error(
+                MessageCode.VALIDATION_ERROR,
+                errors,
+                request.getDescription(false)
+        );
+
+        log.warn("JSON parsing error: {}", errorMessage);
+        return ResponseEntity.status(MessageCode.VALIDATION_ERROR.getStatusCode()).body(response);
+    }
 
     @ExceptionHandler(Exception.class) // Bắt tất cả exception chưa được xử lý
     public ResponseEntity<ApiResponse<Void>> handleGenericException(
