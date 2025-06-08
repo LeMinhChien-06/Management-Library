@@ -3,6 +3,7 @@ package com.example.management.dto.response;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+@Builder
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor

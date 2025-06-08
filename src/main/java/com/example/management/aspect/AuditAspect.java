@@ -1,7 +1,10 @@
 package com.example.management.aspect;
 
 import com.example.management.annotation.TrackAction;
+import com.example.management.constants.MessageCode;
 import com.example.management.entity.User;
+import com.example.management.exception.user.UserExceptions;
+import com.example.management.repository.UserRepository;
 import com.example.management.service.DeviceDetectionService;
 import com.example.management.service.UserLogService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -17,6 +20,7 @@ import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -29,6 +33,7 @@ public class AuditAspect {
 
     private final UserLogService userLogService;
     private final DeviceDetectionService deviceDetectionService;
+    private final UserRepository userRepository;
     private final ExpressionParser parser = new SpelExpressionParser();
 
     @AfterReturning(value = "@annotation(trackAction)", returning = "result")
@@ -70,9 +75,21 @@ public class AuditAspect {
     private User getCurrentUser() {
         try {
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            
             if (auth != null && auth.getPrincipal() instanceof User) {
                 return (User) auth.getPrincipal();
             }
+            
+            // Handle JWT case
+            if (auth != null && auth.getPrincipal() instanceof Jwt) {
+                Jwt jwt = (Jwt) auth.getPrincipal();
+                String username = jwt.getSubject(); // get username from token subject claim
+                
+                if (username != null) {
+                    return userRepository.findByUsername(username).orElseThrow(UserExceptions::userNotFound);
+                }
+            }
+            
         } catch (Exception e) {
             log.warn("Error getting current user", e);
         }

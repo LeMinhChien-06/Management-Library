@@ -21,14 +21,29 @@ public class ApplicationInitConfig {
     ApplicationRunner applicationRunner(UserRepository userRepository) {
         return args -> {
             if (userRepository.findByUsername("admin").isEmpty()) {
-//                var roles = new HashSet<String>();
-//                roles.add(Role.ADMIN.name());
+
                 User user = User.builder()
                         .username("admin")
-                        .fullName("chien dep trai")
-                        .email("minh@gmail.com")
+                        .fullName("admin")
+                        .email("admin@gmail.com")
                         .password(passwordEncoder.encode("admin"))
                         .role(Role.ADMIN)
+                        .active(true)
+                        .build();
+
+                userRepository.save(user);
+                log.warn("Complete");
+            }
+
+            if (userRepository.findByUsername("chien").isEmpty()) {
+
+                User user = User.builder()
+                        .username("chien")
+                        .fullName("minh chien")
+                        .email("minhchien@gmail.com")
+                        .password(passwordEncoder.encode("Minhchien123"))
+                        .role(Role.USER)
+                        .active(true)
                         .build();
 
                 userRepository.save(user);

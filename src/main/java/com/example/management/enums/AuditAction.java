@@ -12,6 +12,9 @@ public enum AuditAction {
     USER_CREATE("Create User"),
     USER_UPDATE("Update User"),
     USER_DELETE("Delete User"),
+    USER_GET_BY_ID("Get User By Id"),
+    USER_VIEW("View User"),
+
 
     // Auth actions
     LOGIN("User Login"),

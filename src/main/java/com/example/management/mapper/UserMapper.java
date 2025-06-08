@@ -1,6 +1,8 @@
 package com.example.management.mapper;
 
 import com.example.management.dto.request.UserCreatRequest;
+import com.example.management.dto.request.UserUpdateRequest;
+import com.example.management.dto.response.UserListResponse;
 import com.example.management.dto.response.UserResponse;
 import com.example.management.entity.User;
 import com.example.management.enums.Role;
@@ -21,8 +23,22 @@ public class UserMapper {
                 .build();
     }
 
+    public User toUser(UserUpdateRequest userUpdateRequest, User user) {
+        return User.builder()
+                .id(user.getId())
+                .username(user.getUsername())
+                .password(user.getPassword())
+                .email(userUpdateRequest.getEmail())
+                .fullName(userUpdateRequest.getFullName())
+                .phone(userUpdateRequest.getPhone())
+                .role(user.getRole())
+                .active(user.getActive())
+                .build();
+    }
+
     public UserResponse toUserResponse(User user) {
         return UserResponse.builder()
+                .id(user.getId())
                 .username(user.getUsername())
                 .fullName(user.getFullName())
                 .email(user.getEmail())
@@ -33,6 +49,17 @@ public class UserMapper {
                 .active(true)
                 .createdAt(user.getCreatedAt())
                 .updatedAt(user.getUpdatedAt())
+                .build();
+    }
+
+    public UserListResponse toUserListResponse(User user) {
+        return UserListResponse.builder()
+                .username(user.getUsername())
+                .fullName(user.getFullName())
+                .email(user.getEmail())
+                .email(user.getEmail())
+                .fullName(user.getFullName())
+                .phone(user.getPhone())
                 .build();
     }
 }

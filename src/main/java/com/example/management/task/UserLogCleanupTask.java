@@ -16,6 +16,7 @@ public class UserLogCleanupTask {
     private final UserLogRepository userLogRepository;
 
     @Scheduled(cron = "0 0 2 * * ?")
+//    @Scheduled(fixedRate = 10000)
     public void cleanupExpiredLogs() {
         userLogRepository.deleteAllByCreatedAt(LocalDateTime.now().minusYears(1));
         log.info(" Cleaned up expired logs at {}", LocalDateTime.now());

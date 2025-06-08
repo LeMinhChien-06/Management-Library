@@ -5,13 +5,15 @@ import com.example.management.dto.request.UserUpdateRequest;
 import com.example.management.dto.response.UserListResponse;
 import com.example.management.dto.response.UserResponse;
 
+import java.util.List;
+
 public interface UserService {
 
     UserResponse createUser(UserCreatRequest userCreatRequest);
 
     UserResponse updateUser(Long id, UserUpdateRequest userUpdateRequest);
 
-    UserListResponse getAllUsers();
+    List<UserListResponse> getAllUsers();
 
     UserResponse getUserById(Long id);
 
