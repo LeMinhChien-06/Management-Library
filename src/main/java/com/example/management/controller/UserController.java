@@ -4,6 +4,7 @@ import com.example.management.constants.MessageCode;
 import com.example.management.dto.request.UserCreatRequest;
 import com.example.management.dto.request.UserUpdateRequest;
 import com.example.management.dto.response.ApiResponse;
+import com.example.management.dto.response.PageDTO;
 import com.example.management.dto.response.UserListResponse;
 import com.example.management.dto.response.UserResponse;
 import com.example.management.service.UserService;
@@ -38,9 +39,23 @@ public class UserController {
     }
 
     @GetMapping("/all")
-    @Operation(summary = "Lấy danh sách tất cả người dùng", description = "API để lấy danh sách tất cả người dùng")
-    public ApiResponse<List<UserListResponse>> getAllUsers() {
-        return ApiResponse.success(MessageCode.USER_LIST_SUCCESS, userService.getAllUsers());
+    @Operation(
+            summary = "Lấy danh sách người dùng với phân trang, tìm kiếm và lọc",
+            description = "API để lấy danh sách người dùng với khả năng phân trang, tìm kiếm theo email/sdt/fullName" +
+                    " và lọc theo trạng thái active"
+    )
+    public ApiResponse<PageDTO<UserListResponse>> getAllUsers(
+            @RequestParam(required = false, defaultValue = "0") @Min(0) int page,
+            @RequestParam(required = false, defaultValue = "10") @Min(1) int size,
+            @RequestParam(required = false) String sort,
+            @RequestParam(required = false) String direction,
+            @RequestParam(required = false) String email,
+            @RequestParam(required = false) String phone,
+            @RequestParam(required = false) String fullName,
+            @RequestParam(required = false) Boolean isActive
+    ) {
+        return ApiResponse.success(MessageCode.USER_LIST_SUCCESS, userService.getAllUsers(page, size, sort, direction,
+                email, phone, fullName, isActive));
     }
 
     @GetMapping("/{id}")

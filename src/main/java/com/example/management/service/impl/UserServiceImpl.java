@@ -3,6 +3,7 @@ package com.example.management.service.impl;
 import com.example.management.annotation.TrackAction;
 import com.example.management.dto.request.UserCreatRequest;
 import com.example.management.dto.request.UserUpdateRequest;
+import com.example.management.dto.response.PageDTO;
 import com.example.management.dto.response.UserListResponse;
 import com.example.management.dto.response.UserResponse;
 import com.example.management.entity.User;
@@ -14,9 +15,13 @@ import com.example.management.repository.UserRepository;
 import com.example.management.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 
@@ -100,11 +105,33 @@ public class UserServiceImpl implements UserService {
     @TrackAction(
             action = AuditAction.USER_VIEW,
             entityType = EntityType.USER,
-            entityId = "#arg",
-            entityName = "#result.username"
+            entityId = "#arg"
     )
-    public List<UserListResponse> getAllUsers() {
-        return userRepository.findAll().stream().map(userMapper::toUserListResponse).toList();
+    public PageDTO<UserListResponse> getAllUsers(
+            int page, int size, String sortBy, String sortDirection,
+            String email, String phone, String fullName, Boolean isActive
+    ) {
+
+        // Tạo Sort direction
+        Sort.Direction direction = "DESC".equals(sortDirection) ? Sort.Direction.DESC : Sort.Direction.ASC;
+
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.by(direction, sortBy));
+
+        Page<User> userPage = userRepository.getAllUsersWithFilters(email, phone, fullName, isActive, pageRequest);
+
+        List<UserListResponse> userList = userPage.getContent()
+                .stream()
+                .map(userMapper::toUserListResponse)
+                .toList();
+
+        log.info("Retrieved {} users with paging and filters", userList.size());
+
+        return PageDTO.of(
+                userList,
+                userPage.getNumber(),
+                userPage.getSize(),
+                userPage.getTotalElements()
+        );
     }
 
     @Override
