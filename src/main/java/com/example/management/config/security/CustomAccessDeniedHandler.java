@@ -9,8 +9,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -18,13 +18,10 @@ import java.time.LocalDateTime;
 
 @Slf4j
 @Component
-public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
-
+public class CustomAccessDeniedHandler implements AccessDeniedHandler {
     @Override
-    public void commence(HttpServletRequest request, HttpServletResponse response,
-                         AuthenticationException authException) throws IOException, ServletException {
-
-        MessageCode messageCode = MessageCode.UNAUTHORIZED;
+    public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException, ServletException {
+        MessageCode messageCode = MessageCode.FORBIDDEN;
 
         // Set response headers
         response.setStatus(messageCode.getStatusCode());
@@ -40,15 +37,13 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
                 .timestamp(LocalDateTime.now())
                 .build();
 
-
-        // Convert to JSON và ghi response
         ObjectMapper mapper = new ObjectMapper();
         mapper.registerModule(new JavaTimeModule());
 
         String jsonResponse = mapper.writeValueAsString(apiResponse);
-        log.warn("Sending response: {}", jsonResponse);
+        log.warn("Access Denied - Sending response: {}", jsonResponse);
 
         response.getWriter().write(jsonResponse);
-        response.getWriter().flush(); // ép buộc gửi dữ liệu ngay lập tức
+        response.getWriter().flush();
     }
 }

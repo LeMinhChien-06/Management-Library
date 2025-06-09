@@ -21,6 +21,7 @@ public class SecurityConfig {
 
     private final CustomJwtDecoder jwtDecoder;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+    private final CustomAccessDeniedHandler customAccessDeniedHandler;
 
     private static final String[] PUBLIC_URIS = {
             "/auth/login",
@@ -32,7 +33,14 @@ public class SecurityConfig {
     };
 
     private static final String[] URI_ADMIN = {
-            "/users/**",
+            "/user/**",
+
+    };
+
+    private static final String[] URI_USER = {
+//            "/user/all",
+            "/user/create",
+            "/user/update/**",
 
     };
 
@@ -42,7 +50,8 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource))
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(PUBLIC_URIS).permitAll()
-                        .requestMatchers(URI_ADMIN).hasAnyRole(Role.ADMIN.name(), Role.USER.name())
+                        .requestMatchers(URI_ADMIN).hasAnyRole(Role.ADMIN.name())
+                        .requestMatchers(URI_USER).hasAnyRole(Role.USER.name())
                         .anyRequest().authenticated()
                 );
 
@@ -51,6 +60,12 @@ public class SecurityConfig {
                 .jwtAuthenticationConverter(jwtAuthenticationConverter()))
                 .authenticationEntryPoint(jwtAuthenticationEntryPoint)
         );
+
+        http.exceptionHandling(exceptions -> exceptions
+                .authenticationEntryPoint(jwtAuthenticationEntryPoint) // 401 - Unauthorized
+                .accessDeniedHandler(customAccessDeniedHandler)         // 403 - Forbidden
+        );
+
 
         return http.build();
     }
