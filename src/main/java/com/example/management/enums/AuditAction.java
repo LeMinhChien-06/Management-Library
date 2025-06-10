@@ -2,6 +2,12 @@ package com.example.management.enums;
 
 public enum AuditAction {
 
+    // Category actions
+    CATEGORY_CREATE("Create Category"),
+    CATEGORY_DELETE("Delete Category"),
+    CATEGORY_VIEW("View Category"),
+    CATEGORY_GET_BY_ID("Get Category By Id"),
+
     // Book actions
     BOOK_CREATE("Create Book"),
     BOOK_UPDATE("Update Book"),
