@@ -18,6 +18,13 @@ public enum MessageCode {
     USER_LIST_SUCCESS("MSG_USER_LIST_SUCCESS", "Lấy danh sách người dùng thành công", 200),
     USER_DETAIL_SUCCESS("MSG_USER_DETAIL_SUCCESS", "Lấy thông tin người dùng thành công", 200),
 
+    // CATEGORY SUCCESS MESSAGES (2xx)
+    CATEGORY_CREATED_SUCCESS("MSG_CATEGORY_CREATED_SUCCESS", "Tạo thể loại thành công", 201),
+    CATEGORY_UPDATED_SUCCESS("MSG_CATEGORY_UPDATED_SUCCESS", "Cập nhật thể loại thành công", 200),
+    CATEGORY_DELETED_SUCCESS("MSG_CATEGORY_DELETED_SUCCESS", "Xóa thể loại thành công", 200),
+    CATEGORY_LIST_SUCCESS("MSG_CATEGORY_LIST_SUCCESS", "Lấy danh sách thể loại thành công", 200),
+    CATEGORY_DETAIL_SUCCESS("MSG_CATEGORY_DETAIL_SUCCESS", "Lấy thông tin thể loại thành công", 200),
+
     // LOGIN/AUTH SUCCESS MESSAGES (2xx)
     LOGIN_SUCCESS("MSG_LOGIN_SUCCESS", "Đăng nhập thành công", 200),
     LOGOUT_SUCCESS("MSG_LOGOUT_SUCCESS", "Đăng xuất thành công", 200),
@@ -61,7 +68,7 @@ public enum MessageCode {
     REQUIRED_PAGE_NUMBER("ERR_REQUIRED_PAGE_NUMBER", "Số trang không được để trống", 400),
     REQUIRED_PAGE_SIZE("ERR_REQUIRED_PAGE_SIZE", "Kích thước trang không được để trống", 400),
     REQUIRED_SORT_FIELD("ERR_REQUIRED_SORT_FIELD", "Trường sắp xếp không được để trống", 400),
-
+    REQUIRED_CATEGORY_NAME("ERR_REQUIRED_CATEGORY_NAME", "Tên thể loại không được để trống", 400),
 
     // AUTH ERROR MESSAGES (401)
     UNAUTHORIZED("ERR_UNAUTHORIZED", "Chưa xác thực", 401),
@@ -87,6 +94,10 @@ public enum MessageCode {
     FILE_NOT_FOUND("ERR_FILE_NOT_FOUND", "File không tồn tại", 404),
     PAGE_NOT_FOUND("ERR_PAGE_NOT_FOUND", "Trang không tồn tại", 404),
     ENDPOINT_NOT_FOUND("ERR_ENDPOINT_NOT_FOUND", "Endpoint không tồn tại", 404),
+
+    // CATEGORY
+    CATEGORY_NOT_FOUND("ERR_CATEGORY_NOT_FOUND", "Thể loại không tồn tại", 404),
+
 
     // CONFLICT ERROR MESSAGES (409)
     CONFLICT("ERR_CONFLICT", "Dữ liệu đã tồn tại", 409),
