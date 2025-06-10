@@ -1,6 +1,7 @@
 package com.example.management.service.impl;
 
 import com.example.management.annotation.TrackAction;
+import com.example.management.constants.SortConstants;
 import com.example.management.dto.request.UserCreatRequest;
 import com.example.management.dto.request.UserUpdateRequest;
 import com.example.management.dto.response.PageDTO;
@@ -13,6 +14,7 @@ import com.example.management.exception.user.UserExceptions;
 import com.example.management.mapper.UserMapper;
 import com.example.management.repository.UserRepository;
 import com.example.management.service.UserService;
+import com.example.management.utils.SortUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -112,10 +114,14 @@ public class UserServiceImpl implements UserService {
             String email, String phone, String fullName, Boolean isActive
     ) {
 
-        // Tạo Sort direction
-        Sort.Direction direction = "DESC".equals(sortDirection) ? Sort.Direction.DESC : Sort.Direction.ASC;
+        Sort sort = SortUtils.createSort(
+                sortBy,
+                sortDirection,
+                SortConstants.User.BASIC_FIELDS,
+                SortConstants.User.CREATED_AT
+        );
 
-        PageRequest pageRequest = PageRequest.of(page, size, Sort.by(direction, sortBy));
+        PageRequest pageRequest = PageRequest.of(page, size, sort);
 
         Page<User> userPage = userRepository.getAllUsersWithFilters(email, phone, fullName, isActive, pageRequest);
 
