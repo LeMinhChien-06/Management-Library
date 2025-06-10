@@ -1,9 +1,9 @@
 package com.example.management.mapper;
 
-import com.example.management.dto.request.UserCreatRequest;
-import com.example.management.dto.request.UserUpdateRequest;
-import com.example.management.dto.response.UserListResponse;
-import com.example.management.dto.response.UserResponse;
+import com.example.management.dto.request.users.UserCreatRequest;
+import com.example.management.dto.request.users.UserUpdateRequest;
+import com.example.management.dto.response.users.UserListResponse;
+import com.example.management.dto.response.users.UserResponse;
 import com.example.management.entity.User;
 import com.example.management.enums.Role;
 import org.springframework.stereotype.Component;

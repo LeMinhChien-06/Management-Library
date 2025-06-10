@@ -1,8 +1,8 @@
 package com.example.management.service.impl;
 
-import com.example.management.dto.request.LoginRequest;
-import com.example.management.dto.request.LogoutRequest;
-import com.example.management.dto.response.LoginResponse;
+import com.example.management.dto.request.auth.LoginRequest;
+import com.example.management.dto.request.auth.LogoutRequest;
+import com.example.management.dto.response.auth.LoginResponse;
 import com.example.management.entity.InvalidatedToken;
 import com.example.management.entity.User;
 import com.example.management.entity.UserSession;
@@ -24,7 +24,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.NonFinal;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpRequest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;

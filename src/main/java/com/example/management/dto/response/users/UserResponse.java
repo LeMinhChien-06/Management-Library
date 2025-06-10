@@ -1,15 +1,17 @@
-package com.example.management.dto.response;
+package com.example.management.dto.response.users;
 
-import com.example.management.enums.Role;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDateTime;
 
 @Getter
 @AllArgsConstructor
 @Builder
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserResponse {
     Long id;
     String username;

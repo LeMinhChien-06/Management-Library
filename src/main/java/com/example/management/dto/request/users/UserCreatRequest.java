@@ -1,4 +1,4 @@
-package com.example.management.dto.request;
+package com.example.management.dto.request.users;
 
 import com.example.management.enums.Role;
 import jakarta.validation.constraints.NotBlank;

@@ -19,8 +19,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.servlet.NoHandlerFoundException;
+import org.springframework.web.method.annotation.HandlerMethodValidationException;
 import jakarta.validation.ConstraintViolationException;
-
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -48,6 +48,41 @@ public class GlobalExceptionHandler {
         );
 
         log.error("Validation error: {}", errors);
+        return ResponseEntity.status(MessageCode.VALIDATION_ERROR.getStatusCode()).body(response);
+    }
+
+    @ExceptionHandler(HandlerMethodValidationException.class)
+    public ResponseEntity<ApiResponse<Void>> handleHandlerMethodValidationException(
+            HandlerMethodValidationException ex, WebRequest request) {
+
+        List<String> errors = ex.getValueResults()
+                .stream()
+                .flatMap(result -> result.getResolvableErrors().stream())
+                .map(error -> {
+                    String message = error.getDefaultMessage();
+                    // Lấy tên parameter từ codes nếu có
+                    String[] codes = error.getCodes();
+                    String parameterName = "parameter";
+                    if (codes != null && codes.length > 0) {
+                        String code = codes[0];
+                        if (code.contains(".")) {
+                            String[] parts = code.split("\\.");
+                            if (parts.length > 1) {
+                                parameterName = parts[parts.length - 1];
+                            }
+                        }
+                    }
+                    return ValidationErrorMapper.mapFieldErrors(parameterName, message != null ? message : "Invalid value");
+                })
+                .collect(Collectors.toList());
+
+        ApiResponse<Void> response = ApiResponse.error(
+                MessageCode.VALIDATION_ERROR,
+                errors,
+                request.getDescription(false)
+        );
+
+        log.error("Handler method validation error: {}", errors);
         return ResponseEntity.status(MessageCode.VALIDATION_ERROR.getStatusCode()).body(response);
     }
 

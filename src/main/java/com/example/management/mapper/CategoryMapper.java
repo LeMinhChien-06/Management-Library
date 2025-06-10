@@ -1,4 +1,45 @@
 package com.example.management.mapper;
 
+import com.example.management.dto.request.Categories.CategoriesRequest;
+import com.example.management.dto.response.categories.CategoriesResponse;
+import com.example.management.dto.response.categories.CategoryListResponse;
+import com.example.management.entity.Categories;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
+
+import java.time.LocalDate;
+
+@Component
+@RequiredArgsConstructor
 public class CategoryMapper {
+
+    private final BookMapper bookMapper;
+
+    public Categories toCategory(CategoriesRequest categoriesRequest) {
+        return Categories.builder()
+                .name(categoriesRequest.getName())
+                .description(categoriesRequest.getDescription())
+                .build();
+
+    }
+
+    public CategoriesResponse toCategoryResponse(Categories categories) {
+        return CategoriesResponse.builder()
+                .id(categories.getId())
+                .name(categories.getName())
+                .description(categories.getDescription())
+                .createdAt(categories.getCreatedAt())
+                .build();
+
+    }
+
+    public CategoryListResponse toCategoryListResponse(Categories categories) {
+        return CategoryListResponse.builder()
+                .name(categories.getName())
+                .description(categories.getDescription())
+                .createdAt(categories.getCreatedAt())
+                .books(bookMapper.toBookResponseList(categories.getBooks()))
+                .build();
+    }
+
 }

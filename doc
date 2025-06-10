@@ -18,5 +18,6 @@ context.setVariable("result", result);  ← Variable name trong SpEL context
 entityId = "#result.data.id"  ← SpEL expression reference
 
 ### Các annotation và ý nghĩa
-@AfterReturning: chạy sau khi method hoàn tất và trả về kết quả
+- `@AfterReturning`: chạy sau khi method hoàn tất và trả về kết quả
 value = "@annotation(trackAction)": chỉ áp dụng cho các method được gắn annotation @TrackAction
+- `@UtilityClass`: Lombok annotation tự động tạo constructor private và làm tất cả methods thành static

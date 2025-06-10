@@ -1,22 +1,19 @@
 package com.example.management.controller;
 
 import com.example.management.constants.MessageCode;
-import com.example.management.dto.request.UserCreatRequest;
-import com.example.management.dto.request.UserUpdateRequest;
+import com.example.management.dto.request.users.UserCreatRequest;
+import com.example.management.dto.request.users.UserUpdateRequest;
 import com.example.management.dto.response.ApiResponse;
 import com.example.management.dto.response.PageDTO;
-import com.example.management.dto.response.UserListResponse;
-import com.example.management.dto.response.UserResponse;
+import com.example.management.dto.response.users.UserListResponse;
+import com.example.management.dto.response.users.UserResponse;
 import com.example.management.service.UserService;
-import com.example.management.service.impl.UserServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/user")

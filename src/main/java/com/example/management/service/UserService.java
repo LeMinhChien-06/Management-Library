@@ -1,12 +1,10 @@
 package com.example.management.service;
 
-import com.example.management.dto.request.UserCreatRequest;
-import com.example.management.dto.request.UserUpdateRequest;
+import com.example.management.dto.request.users.UserCreatRequest;
+import com.example.management.dto.request.users.UserUpdateRequest;
 import com.example.management.dto.response.PageDTO;
-import com.example.management.dto.response.UserListResponse;
-import com.example.management.dto.response.UserResponse;
-
-import java.util.List;
+import com.example.management.dto.response.users.UserListResponse;
+import com.example.management.dto.response.users.UserResponse;
 
 public interface UserService {
 

@@ -2,11 +2,11 @@ package com.example.management.service.impl;
 
 import com.example.management.annotation.TrackAction;
 import com.example.management.constants.SortConstants;
-import com.example.management.dto.request.UserCreatRequest;
-import com.example.management.dto.request.UserUpdateRequest;
+import com.example.management.dto.request.users.UserCreatRequest;
+import com.example.management.dto.request.users.UserUpdateRequest;
 import com.example.management.dto.response.PageDTO;
-import com.example.management.dto.response.UserListResponse;
-import com.example.management.dto.response.UserResponse;
+import com.example.management.dto.response.users.UserListResponse;
+import com.example.management.dto.response.users.UserResponse;
 import com.example.management.entity.User;
 import com.example.management.enums.AuditAction;
 import com.example.management.enums.EntityType;
@@ -23,7 +23,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 
 import java.util.List;
 

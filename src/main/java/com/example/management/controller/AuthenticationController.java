@@ -1,10 +1,10 @@
 package com.example.management.controller;
 
 import com.example.management.constants.MessageCode;
-import com.example.management.dto.request.LoginRequest;
-import com.example.management.dto.request.LogoutRequest;
+import com.example.management.dto.request.auth.LoginRequest;
+import com.example.management.dto.request.auth.LogoutRequest;
 import com.example.management.dto.response.ApiResponse;
-import com.example.management.dto.response.LoginResponse;
+import com.example.management.dto.response.auth.LoginResponse;
 import com.example.management.service.AuthenticationService;
 import com.nimbusds.jose.JOSEException;
 import io.swagger.v3.oas.annotations.Operation;
@@ -14,7 +14,6 @@ import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.http.HttpRequest;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;

@@ -1,13 +1,12 @@
 package com.example.management.service;
 
-import com.example.management.dto.request.LoginRequest;
-import com.example.management.dto.request.LogoutRequest;
-import com.example.management.dto.response.LoginResponse;
+import com.example.management.dto.request.auth.LoginRequest;
+import com.example.management.dto.request.auth.LogoutRequest;
+import com.example.management.dto.response.auth.LoginResponse;
 import com.example.management.entity.User;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jwt.SignedJWT;
 import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.http.HttpRequest;
 
 import java.text.ParseException;
 
