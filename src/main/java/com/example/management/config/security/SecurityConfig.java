@@ -38,7 +38,7 @@ public class SecurityConfig {
     };
 
     private static final String[] URI_USER = {
-//            "/user/all",
+            "/user/all",
             "/user/create",
             "/user/update/**",
 
@@ -50,14 +50,14 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource))
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(PUBLIC_URIS).permitAll()
-                        .requestMatchers(URI_ADMIN).hasAnyRole(Role.ADMIN.name())
-                        .requestMatchers(URI_USER).hasAnyRole(Role.USER.name())
+                        .requestMatchers(URI_USER).hasAnyAuthority(Role.USER.name(), Role.ADMIN.name())
+                        .requestMatchers(URI_ADMIN).hasAuthority(Role.ADMIN.name())
                         .anyRequest().authenticated()
                 );
 
         http.oauth2ResourceServer(oauth2 -> oauth2.jwt(jwtConfigurer -> jwtConfigurer
-                .decoder(jwtDecoder)
-                .jwtAuthenticationConverter(jwtAuthenticationConverter()))
+                        .decoder(jwtDecoder)
+                        .jwtAuthenticationConverter(jwtAuthenticationConverter()))
                 .authenticationEntryPoint(jwtAuthenticationEntryPoint)
         );
 
