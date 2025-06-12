@@ -1,6 +1,7 @@
 package com.example.management.service;
 
 import com.example.management.entity.User;
+import com.example.management.enums.AuditAction;
 import jakarta.servlet.http.HttpServletRequest;
 
 public interface UserLogService {

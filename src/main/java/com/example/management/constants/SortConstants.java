@@ -39,7 +39,7 @@ public final class SortConstants {
         public static final Set<String> ALLOWED_FIELDS = Set.of(
             CREATED_AT, TITLE, AUTHOR, ISBN, ID
         );
-        
+
         private Book() {}
     }
 

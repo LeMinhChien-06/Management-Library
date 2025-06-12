@@ -8,6 +8,7 @@ import lombok.experimental.FieldDefaults;
 @Table(name = "books")
 @Getter
 @Setter
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -24,7 +25,7 @@ public class Book extends BaseEntity {
     String author;
 
     @Column(unique = true, length = 20)
-    String isbn;
+    String isbn; // Mã số chuẩn quốc tế: ISBN: 978-604-77-5555-1
 
     @Column(name = "qr_code", unique = true)
     String qrCode;
@@ -47,7 +48,7 @@ public class Book extends BaseEntity {
     private String imageUrl;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id")
+    @JoinColumn(name = "category_id", nullable = false)
     Categories category;
 
 

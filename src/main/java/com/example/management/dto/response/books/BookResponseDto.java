@@ -1,6 +1,5 @@
 package com.example.management.dto.response.books;
 
-import com.example.management.dto.response.categories.CategoriesResponse;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,7 +10,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class BookResponse {
+public class BookResponseDto {
      Long id;
      String title;
      String author;
@@ -23,6 +22,4 @@ public class BookResponse {
      String publisher;
      String description;
      String imageUrl;
-     Long categoryId;
-     String categoryName;
 }

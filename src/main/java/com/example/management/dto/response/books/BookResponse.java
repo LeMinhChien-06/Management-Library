@@ -1,5 +1,6 @@
 package com.example.management.dto.response.books;
 
+import com.example.management.dto.response.categories.CategoriesResponse;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,4 +23,6 @@ public class BookResponse {
      String publisher;
      String description;
      String imageUrl;
+     Long categoryId;
+     String categoryName;
 }

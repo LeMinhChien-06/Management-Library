@@ -30,6 +30,9 @@ public class SecurityConfig {
             "/swagger-ui/**",
             "/v3/api-docs",
             "/v3/api-docs/**",
+            "/swagger-ui.html",
+            "/swagger-resources/**",
+            "/webjars/**",
     };
 
     private static final String[] URI_ADMIN = {

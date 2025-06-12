@@ -12,7 +12,7 @@ spring:
 
 jwt:
   signerKey: "JRuSzhqIwpOXPL/C8O+4tsXdcYr8TCAm7i99Bq59Qbe5I6yOCJo5LUSUcSfKNoaQ"
-  valid-duration: 1
+  valid-duration: 10000
 
 server:
   port: 8080

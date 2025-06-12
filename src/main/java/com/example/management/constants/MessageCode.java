@@ -25,6 +25,15 @@ public enum MessageCode {
     CATEGORY_LIST_SUCCESS("MSG_CATEGORY_LIST_SUCCESS", "Lấy danh sách thể loại thành công", 200),
     CATEGORY_DETAIL_SUCCESS("MSG_CATEGORY_DETAIL_SUCCESS", "Lấy thông tin thể loại thành công", 200),
 
+    // BOOK SUCCESS MESSAGES (2xx)
+    BOOK_CREATED_SUCCESS("MSG_BOOK_CREATED_SUCCESS", "Tạo sách thành công", 201),
+    BOOK_UPDATED_SUCCESS("MSG_BOOK_UPDATED_SUCCESS", "Cập nhật sách thành công", 200),
+    BOOK_DELETED_SUCCESS("MSG_BOOK_DELETED_SUCCESS", "Xóa sách thành công", 200),
+    BOOK_LIST_SUCCESS("MSG_BOOK_LIST_SUCCESS", "Lấy danh sách sách thành công", 200),
+    BOOK_DETAIL_SUCCESS("MSG_BOOK_DETAIL_SUCCESS", "Lấy thông tin sách thành công", 200),
+    BOOK_SEARCH_SUCCESS("MSG_BOOK_SEARCH_SUCCESS", "Tìm kiếm sách thành công", 200),
+    BOOK_SEARCH_BY_CATEGORY_SUCCESS("MSG_BOOK_SEARCH_BY_CATEGORY_SUCCESS", "Tìm kiếm sách theo loại thành công", 200),
+
     // LOGIN/AUTH SUCCESS MESSAGES (2xx)
     LOGIN_SUCCESS("MSG_LOGIN_SUCCESS", "Đăng nhập thành công", 200),
     LOGOUT_SUCCESS("MSG_LOGOUT_SUCCESS", "Đăng xuất thành công", 200),
@@ -69,6 +78,8 @@ public enum MessageCode {
     REQUIRED_PAGE_SIZE("ERR_REQUIRED_PAGE_SIZE", "Kích thước trang không được để trống", 400),
     REQUIRED_SORT_FIELD("ERR_REQUIRED_SORT_FIELD", "Trường sắp xếp không được để trống", 400),
     REQUIRED_CATEGORY_NAME("ERR_REQUIRED_CATEGORY_NAME", "Tên thể loại không được để trống", 400),
+    REQUIRED_BOOK_NAME("ERR_REQUIRED_BOOK_NAME", "Tên sách không được để trống", 400),
+    REQUIRED_BOOK_AUTHOR("ERR_REQUIRED_BOOK_AUTHOR", "Tên tác giả không được để trống", 400),
 
     // AUTH ERROR MESSAGES (401)
     UNAUTHORIZED("ERR_UNAUTHORIZED", "Chưa xác thực", 401),
@@ -98,6 +109,8 @@ public enum MessageCode {
     // CATEGORY
     CATEGORY_NOT_FOUND("ERR_CATEGORY_NOT_FOUND", "Thể loại không tồn tại", 404),
 
+    // BOOK
+    BOOK_NOT_FOUND("ERR_BOOK_NOT_FOUND", "Sách không tồn tại", 404),
 
     // CONFLICT ERROR MESSAGES (409)
     CONFLICT("ERR_CONFLICT", "Dữ liệu đã tồn tại", 409),

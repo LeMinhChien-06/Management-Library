@@ -13,6 +13,7 @@ public enum AuditAction {
     BOOK_UPDATE("Update Book"),
     BOOK_DELETE("Delete Book"),
     BOOK_VIEW("View Book"),
+    BOOK_GET_BY_ID("Get Book By Id"),
 
     // User actions
     USER_CREATE("Create User"),

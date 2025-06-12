@@ -7,8 +7,6 @@ import com.example.management.entity.Categories;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDate;
-
 @Component
 @RequiredArgsConstructor
 public class CategoryMapper {
@@ -30,7 +28,6 @@ public class CategoryMapper {
                 .description(categories.getDescription())
                 .createdAt(categories.getCreatedAt())
                 .build();
-
     }
 
     public CategoryListResponse toCategoryListResponse(Categories categories) {
@@ -38,7 +35,7 @@ public class CategoryMapper {
                 .name(categories.getName())
                 .description(categories.getDescription())
                 .createdAt(categories.getCreatedAt())
-                .books(bookMapper.toBookResponseList(categories.getBooks()))
+                .books(bookMapper.toBookResponseDto(categories.getBooks()))
                 .build();
     }
 
