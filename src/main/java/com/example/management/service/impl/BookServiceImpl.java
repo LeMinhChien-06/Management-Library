@@ -14,6 +14,7 @@ import com.example.management.mapper.BookMapper;
 import com.example.management.repository.BookRepository;
 import com.example.management.service.BookService;
 import com.example.management.service.GeneratorService;
+import com.example.management.service.QRCodeService;
 import com.example.management.utils.SortUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,6 +34,7 @@ public class BookServiceImpl implements BookService {
     private final BookRepository bookRepository;
     private final BookMapper bookMapper;
     private final GeneratorService generatorService;
+    private final QRCodeService qrCodeService;
 
     @Override
     @Transactional
@@ -50,8 +52,32 @@ public class BookServiceImpl implements BookService {
             log.info("Auto-generated ISBN for book '{}' is '{}'", book.getTitle(), book.getIsbn());
         }
 
+        // Tạo temporary QR code trước khi save (để đảm bảo unique)
+        String tempQRCode = qrCodeService.generateTemporaryQRCode(
+                book.getTitle(),
+                book.getAuthor(),
+                book.getIsbn()
+        );
+        book.setQrCode(tempQRCode);
+
+
         Book savedBook = bookRepository.save(book);
+
+        log.info("Saved book with temporary QR: {}", savedBook.getId());
+
+        // Tạo QR Code ảnh chính thức với book ID
+        String finalQRImageUrl = qrCodeService.updateToFinalQRCode(
+                savedBook.getId(),
+                savedBook.getTitle(),
+                savedBook.getIsbn(),
+                tempQRCode
+        );
+
+        savedBook.setQrCode(finalQRImageUrl);
+        savedBook = bookRepository.save(savedBook);
+
         log.info("Saved book: {}", savedBook);
+
         return bookMapper.toBookResponse(savedBook);
     }
 
@@ -65,9 +91,23 @@ public class BookServiceImpl implements BookService {
     )
     public BookResponse updateBook(Long id, BookUpdateRequest bookUpdateRequest) {
         Book book = bookRepository.findByIdWithCategory(id).orElseThrow(BookExceptions::bookNotFound);
+
+        String oldQRCode = book.getQrCode();
         Book updatedBook = bookMapper.toBook(book, bookUpdateRequest);
+
+        if (!book.getTitle().equals(bookUpdateRequest.getTitle())) {
+            qrCodeService.deleteQRCodeImage(oldQRCode);
+        }
+
+        String newQRCode = qrCodeService.generateUniqueQRCode(id, updatedBook.getTitle(), updatedBook.getIsbn());
+        updatedBook.setQrCode(newQRCode);
+
+        log.info("Regenerated QR Code for updated book: {}", id);
+
         Book savedBook = bookRepository.save(updatedBook);
+
         log.info("Updated book: {}", savedBook);
+
         return bookMapper.toBookResponse(savedBook);
     }
 
@@ -128,7 +168,12 @@ public class BookServiceImpl implements BookService {
             entityName = "#result.title"
     )
     public void deleteBookById(Long id) {
-        bookRepository.findByIdWithCategory(id).orElseThrow(BookExceptions::bookNotFound);
+        Book book = bookRepository.findByIdWithCategory(id).orElseThrow(BookExceptions::bookNotFound);
+        if (book.getQrCode() != null) {
+            qrCodeService.deleteQRCodeImage(book.getQrCode());
+            log.info("Deleted QR Code image for book: {}", id);
+        }
+
         bookRepository.deleteById(id);
         log.info("Deleted book with ID: {}", id);
     }

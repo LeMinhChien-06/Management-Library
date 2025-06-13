@@ -28,7 +28,7 @@ public class Book extends BaseEntity {
     String isbn; // Mã số chuẩn quốc tế: ISBN: 978-604-77-5555-1
 
     @Column(name = "qr_code", unique = true)
-    String qrCode;
+    String qrCode; // URL đến ảnh QR Code
 
     @Column(name = "total_quantity")
     Integer totalQuantity;

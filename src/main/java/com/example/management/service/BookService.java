@@ -4,9 +4,7 @@ import com.example.management.dto.request.books.BookCreateRequest;
 import com.example.management.dto.request.books.BookUpdateRequest;
 import com.example.management.dto.response.PageDTO;
 import com.example.management.dto.response.books.BookResponse;
-import org.springframework.data.domain.Page;
 
-import java.util.List;
 
 public interface BookService {
 
