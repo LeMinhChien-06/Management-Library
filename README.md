@@ -17,6 +17,9 @@ Developed a secure web-based library management system with comprehensive loggin
 - **JWT** - Token-based authentication
 - **Swagger/OpenAPI** - API documentation
 
+## Libraries Used
+- **ZXing (QRCodeWriter, MatrixToImageWriter)** - for generating QQRCode
+
 
 ## Installation and Running
 
