@@ -10,12 +10,30 @@ spring:
     hibernate:
       ddl-auto: none
 
+  # File upload configuration
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+
 jwt:
   signerKey: "JRuSzhqIwpOXPL/C8O+4tsXdcYr8TCAm7i99Bq59Qbe5I6yOCJo5LUSUcSfKNoaQ"
   valid-duration: 10000
 
 server:
   port: 8080
+
+# QR Code configuration
+app:
+  qr:
+    storage:
+      path: uploads/qr-codes
+    base:
+      url: http://localhost:8080/api/files/qr
+    image:
+      size: 400
+
+
 
 open:
   api:
@@ -33,4 +51,6 @@ logging:
     com.example.management: INFO
     org.springframework.web: INFO
     org.hibernate: INFO
+
+
 
