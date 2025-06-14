@@ -1,5 +1,6 @@
 package com.example.management.service.impl;
 
+import com.example.management.config.QRCodeConfigProperties;
 import com.example.management.repository.BookRepository;
 import com.example.management.service.QRCodeService;
 import com.google.zxing.BarcodeFormat;
@@ -9,8 +10,6 @@ import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.FileUtils;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -29,16 +28,8 @@ import java.util.UUID;
 public class QRCodeServiceImpl implements QRCodeService {
 
     private final BookRepository bookRepository;
+    private final QRCodeConfigProperties qrCodeConfigProperties;
     private final Random random = new Random();
-
-    @Value("${app.qr.storage.path}")
-    private String qrStoragePath;
-
-    @Value("${app.qr.base.url}")
-    private String qrBaseUrl;
-
-    @Value("${app.qr.image.size}")
-    private int qrImageSize;
 
 
     @Override
@@ -95,7 +86,7 @@ public class QRCodeServiceImpl implements QRCodeService {
         try {
             // Extract filename from URL
             String fileName = qrCodeUrl.substring(qrCodeUrl.lastIndexOf("/") + 1);
-            Path filePath = Paths.get(qrStoragePath, fileName);
+            Path filePath = Paths.get(qrCodeConfigProperties.getQrStoragePath(), fileName);
 
             if (Files.exists(filePath)) {
                 Files.delete(filePath);
@@ -143,7 +134,7 @@ public class QRCodeServiceImpl implements QRCodeService {
     private String createQRCodeImage(String qrData, Long bookId) {
         try {
             // 1. Tạo thư mục nếu chưa có
-            Path uploadDir = Paths.get(qrStoragePath);
+            Path uploadDir = Paths.get(qrCodeConfigProperties.getQrStoragePath());
             if (!Files.exists(uploadDir)) {
                 Files.createDirectories(uploadDir);
                 log.info("Created QR storage directory: {}", uploadDir);
@@ -164,15 +155,15 @@ public class QRCodeServiceImpl implements QRCodeService {
             BitMatrix bitMatrix = qrCodeWriter.encode(
                     qrData,
                     BarcodeFormat.QR_CODE,
-                    qrImageSize,
-                    qrImageSize
+                    qrCodeConfigProperties.getQrImageSize(),
+                    qrCodeConfigProperties.getQrImageSize()
             );
 
             // 4. Lưu thành ảnh PNG
             MatrixToImageWriter.writeToPath(bitMatrix, "PNG", filePath);
 
             // 5. Tạo URL để truy cập
-            String qrImageUrl = qrBaseUrl + "/" + fileName;
+            String qrImageUrl = qrCodeConfigProperties.getQrBaseUrl() + "/" + fileName;
 
             log.info("Created QR Code image: {} -> URL: {}", filePath, qrImageUrl);
             return qrImageUrl;

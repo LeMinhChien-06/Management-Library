@@ -25,14 +25,9 @@ server:
 
 # QR Code configuration
 app:
-  qr:
-    storage:
-      path: uploads/qr-codes
-    base:
-      url: http://localhost:8080/api/files/qr
-    image:
-      size: 400
-
+  qrStoragePath: uploads/qr-codes
+  qrBaseUrl: http://localhost:8080/api/files/qr
+  qrImageSize: 400
 
 
 open:

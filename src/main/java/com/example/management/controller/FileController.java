@@ -1,9 +1,10 @@
 package com.example.management.controller;
 
+import com.example.management.config.QRCodeConfigProperties;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
@@ -17,17 +18,17 @@ import java.nio.file.Paths;
 @Slf4j
 @RestController
 @RequestMapping("/files")
+@RequiredArgsConstructor
 @Tag(name = "File Controller", description = "API xem ảnh")
 public class FileController {
 
-    @Value("${app.qr.storage.path}")
-    private String qrStoragePath;
+    private final QRCodeConfigProperties qrCodeConfigProperties;
 
     @GetMapping("/qr/{fileName}")
     @Operation(summary = "Lấy ảnh QR", description = "API để lấy ảnh QR từ hệ thống lưu trữ")
     public ResponseEntity<Resource> getQRImage(@PathVariable String fileName) {
         try {
-            Path filePath = Paths.get(qrStoragePath).resolve(fileName);
+            Path filePath = Paths.get(qrCodeConfigProperties.getQrStoragePath()).resolve(fileName);
             Resource resource = new UrlResource(filePath.toUri());
 
             if (resource.exists() && resource.isReadable()) {
