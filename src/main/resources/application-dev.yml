@@ -13,8 +13,8 @@ spring:
   # File upload configuration
   servlet:
     multipart:
-      max-file-size: 10MB
-      max-request-size: 10MB
+      max-file-size: 100MB
+      max-request-size: 100MB
 
 jwt:
   signerKey: "JRuSzhqIwpOXPL/C8O+4tsXdcYr8TCAm7i99Bq59Qbe5I6yOCJo5LUSUcSfKNoaQ"
@@ -29,6 +29,11 @@ app:
   qrBaseUrl: http://localhost:8080/api/files/qr
   qrImageSize: 400
 
+minio:
+  endpoint: "http://localhost:9000"
+  access-key: admin1
+  secret-key: admin123
+  bucket-name: bucket-admin
 
 open:
   api:
@@ -46,6 +51,3 @@ logging:
     com.example.management: INFO
     org.springframework.web: INFO
     org.hibernate: INFO
-
-
-
