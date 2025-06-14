@@ -27,7 +27,7 @@ server:
 app:
   qrStoragePath: uploads/qr-codes
   qrBaseUrl: http://localhost:8080/api/files/qr
-  qrImageSize: 400
+  qrImageSize: 150
 
 minio:
   endpoint: "http://localhost:9000"

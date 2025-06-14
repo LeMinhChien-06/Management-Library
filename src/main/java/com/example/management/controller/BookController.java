@@ -13,6 +13,9 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/books")
@@ -24,8 +27,10 @@ public class BookController {
 
     @PostMapping("/create")
     @Operation(summary = "Tạo sách", description = "API để tạo một sách mới")
-    public ApiResponse<BookResponse> createBook(@Valid @RequestBody BookCreateRequest bookCreateRequest) {
-        return ApiResponse.success(MessageCode.BOOK_CREATED_SUCCESS, bookService.creatBook(bookCreateRequest));
+    public ApiResponse<BookResponse> createBook(@Valid @RequestPart("book") BookCreateRequest bookCreateRequest,
+                                                @RequestPart("file") MultipartFile fileImage
+    ) throws IOException {
+        return ApiResponse.success(MessageCode.BOOK_CREATED_SUCCESS, bookService.creatBook(bookCreateRequest, fileImage));
     }
 
     @PutMapping("/update/{id}")

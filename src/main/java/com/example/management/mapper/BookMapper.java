@@ -62,6 +62,7 @@ public class BookMapper {
                 .publicationYear(book.getPublicationYear())
                 .publisher(book.getPublisher())
                 .description(book.getDescription())
+                .imageUrl(book.getImageUrl())
                 // ## Cú pháp Ternary Operator: điều_kiện ? giá_trị_nếu_đúng : giá_trị_nếu_sai
                 .categoryId(book.getCategory() != null ? book.getCategory().getId() : null)
                 .categoryName(book.getCategory() != null ? book.getCategory().getName() : null)

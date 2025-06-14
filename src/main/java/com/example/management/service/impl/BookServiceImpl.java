@@ -14,7 +14,6 @@ import com.example.management.mapper.BookMapper;
 import com.example.management.repository.BookRepository;
 import com.example.management.service.BookService;
 import com.example.management.service.GeneratorService;
-import com.example.management.service.QRCodeService;
 import com.example.management.utils.SortUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,8 +22,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.UUID;
 
 @Slf4j
 @Service
@@ -34,7 +36,6 @@ public class BookServiceImpl implements BookService {
     private final BookRepository bookRepository;
     private final BookMapper bookMapper;
     private final GeneratorService generatorService;
-    private final QRCodeService qrCodeService;
 
     @Override
     @Transactional
@@ -44,7 +45,7 @@ public class BookServiceImpl implements BookService {
             entityId = "#result.id",
             entityName = "#result.title"
     )
-    public BookResponse creatBook(BookCreateRequest bookCreateRequest) {
+    public BookResponse creatBook(BookCreateRequest bookCreateRequest, MultipartFile fileImage) throws IOException {
         Book book = bookMapper.toBook(bookCreateRequest);
 
         if (bookCreateRequest.getIsbn() == null || bookCreateRequest.getIsbn().isEmpty()) {
@@ -53,7 +54,7 @@ public class BookServiceImpl implements BookService {
         }
 
         // Tạo temporary QR code trước khi save (để đảm bảo unique)
-        String tempQRCode = qrCodeService.generateTemporaryQRCode(
+        String tempQRCode = generatorService.generateTemporaryQRCode(
                 book.getTitle(),
                 book.getAuthor(),
                 book.getIsbn()
@@ -65,15 +66,26 @@ public class BookServiceImpl implements BookService {
 
         log.info("Saved book with temporary QR: {}", savedBook.getId());
 
-        // Tạo QR Code ảnh chính thức với book ID
-        String finalQRImageUrl = qrCodeService.updateToFinalQRCode(
-                savedBook.getId(),
-                savedBook.getTitle(),
-                savedBook.getIsbn(),
-                tempQRCode
+        String qrData = generatorService.generateUniqueQRCode(savedBook.getId(), savedBook.getTitle(), savedBook.getIsbn());
+
+        // Đặt tên object cho MinIO
+        String objectName = "covers/" + UUID.randomUUID() + "_" + fileImage.getOriginalFilename();
+
+        // Chèn QR vào ảnh bìa và upload lên MinIO
+        String imageUrl = generatorService.addQRCodeAndUploadToMinio(
+                fileImage.getInputStream(),
+                qrData,
+                objectName
         );
 
+        savedBook.setImageUrl(imageUrl);
+
+        String finalQRImageUrl = generatorService.createQRCodeImage(
+                qrData,
+                savedBook.getId()
+        );
         savedBook.setQrCode(finalQRImageUrl);
+
         savedBook = bookRepository.save(savedBook);
 
         log.info("Saved book: {}", savedBook);
@@ -95,12 +107,9 @@ public class BookServiceImpl implements BookService {
         String oldQRCode = book.getQrCode();
         Book updatedBook = bookMapper.toBook(book, bookUpdateRequest);
 
-        if (!book.getTitle().equals(bookUpdateRequest.getTitle())) {
-            qrCodeService.deleteQRCodeImage(oldQRCode);
-        }
-
-        String newQRCode = qrCodeService.generateUniqueQRCode(id, updatedBook.getTitle(), updatedBook.getIsbn());
-        updatedBook.setQrCode(newQRCode);
+//        if (!book.getTitle().equals(bookUpdateRequest.getTitle())) {
+//            generatorService.deleteQRCodeImage(oldQRCode);
+//        }
 
         log.info("Regenerated QR Code for updated book: {}", id);
 
@@ -170,7 +179,7 @@ public class BookServiceImpl implements BookService {
     public void deleteBookById(Long id) {
         Book book = bookRepository.findByIdWithCategory(id).orElseThrow(BookExceptions::bookNotFound);
         if (book.getQrCode() != null) {
-            qrCodeService.deleteQRCodeImage(book.getQrCode());
+            generatorService.deleteQRCodeImage(book.getQrCode());
             log.info("Deleted QR Code image for book: {}", id);
         }
 
