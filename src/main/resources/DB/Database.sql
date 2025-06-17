@@ -59,6 +59,17 @@ CREATE TABLE borrowings
     FOREIGN KEY (book_id) REFERENCES books (id)
 );
 
+-- borrowing_details table
+CREATE TABLE borrowing_details
+(
+    id           BIGINT AUTO_INCREMENT PRIMARY KEY,
+    borrowing_id BIGINT NOT NULL,
+    book_id      BIGINT NOT NULL,
+    status       ENUM('BORROWED', 'RETURNED') DEFAULT 'BORROWED',
+    FOREIGN KEY (borrowing_id) REFERENCES borrowings (id),
+    FOREIGN KEY (book_id) REFERENCES books (id)
+);
+
 -- User logs table
 CREATE TABLE user_logs
 (
