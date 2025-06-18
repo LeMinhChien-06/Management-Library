@@ -24,6 +24,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -45,11 +46,40 @@ public class BorrowingDetailServiceImpl implements BorrowingDetailService {
             throw BorrowingExceptions.borrowBooks();
         }
 
-        User user = userRepository.findById(userId).orElseThrow(UserExceptions::userNotFound);
+        User user = userRepository.findByIdAndActive(userId).orElseThrow(UserExceptions::userNotFound);
+
+        List<Borrowing> activeBorrowings = borrowingRepository.findByUserIdAndDetailStatus(userId, Status.BORROWED);
+
+        int currentBorrowingCount = activeBorrowings.stream()
+                .mapToInt(b->b.getBorrowingDetails().size())
+                .sum();
+
+        if (currentBorrowingCount + bookIds.size() > 5) {
+            throw BorrowingExceptions.exceedsMaxBorrowLimit();
+        }
+
+        Set<Long> alreadyBorrowedBookIds = activeBorrowings.stream()
+                .flatMap(b -> b.getBorrowingDetails().stream())
+                .map(d -> d.getBook().getId())
+                .collect(Collectors.toSet());
+
+        List<Long> duplicateBooks = bookIds.stream()
+                .filter(alreadyBorrowedBookIds::contains)
+                .collect(Collectors.toList());
+
+        if (!duplicateBooks.isEmpty()) {
+            throw BorrowingExceptions.booksAlreadyBorrowed();
+        }
 
         Borrowing borrowing = new Borrowing();
         borrowing.setUser(user);
         borrowing.setBorrowDate(LocalDate.now());
+
+        if (dueDate.isBefore(LocalDate.now()) ||
+                dueDate.isAfter(LocalDate.now().plusDays(30))) {
+            throw BorrowingExceptions.invalidDueDate();
+        }
+
         borrowing.setDueDate(dueDate);
 
         List<Book> books = bookRepository.findAllById(bookIds);

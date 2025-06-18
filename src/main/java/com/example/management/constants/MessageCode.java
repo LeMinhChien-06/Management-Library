@@ -115,9 +115,13 @@ public enum MessageCode {
     // BOOK
     BOOK_NOT_FOUND("ERR_BOOK_NOT_FOUND", "Sách không tồn tại", 404),
 
-    // BORROWING MƯỢN SÁCH ( 1000 - 1999)
-    BOOk_OUT_OF_STOCK("ERR_BOOK_OUT_OF_STOCK", "Sách hết hàng", 1001),
-    BORROW_BOOK_MAX("ERR_BORROW_BOOK_MAX", "Bạn chỉ được mượn tối đa 5 cuốn sách trong 1 phiếu!", 1002),
+    // BORROWING MƯỢN SÁCH
+    BOOk_OUT_OF_STOCK("ERR_BOOK_OUT_OF_STOCK", "Sách hết hàng", 400),
+    BORROW_BOOK_MAX("ERR_BORROW_BOOK_MAX", "Bạn chỉ được mượn tối đa 5 cuốn sách trong 1 phiếu!", 400),
+    MAX_BORROW_LIMIT("ERR_MAX_BORROW_LIMIT", "Đã vượt quá giới hạn mượn sách", 400),
+    ALREADY_BORROW("ERR_ALREADY_BORROW", "Bạn đã mượn sách này rồi", 400),
+    INVALID_DUE_DATE("ERR_INVALID_DUE_DATE", "Ngày trả sách không vượt quá 30 ngày từ khi mượn sách", 400),
+    REQUIRED_DUE_DATE("ERR_REQUIRED_DUE_DATE", "Ngày trả không được để trống", 400),
 
     // CONFLICT ERROR MESSAGES (409)
     CONFLICT("ERR_CONFLICT", "Dữ liệu đã tồn tại", 409),

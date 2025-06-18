@@ -12,4 +12,16 @@ public class BorrowingExceptions {
     public static AppException bookOutOfStock(Long bookId) {
         return new AppException(MessageCode.BOOk_OUT_OF_STOCK);
     }
+
+    public static AppException exceedsMaxBorrowLimit() {
+        return new AppException(MessageCode.MAX_BORROW_LIMIT);
+    }
+
+    public static AppException booksAlreadyBorrowed() {
+        return new AppException(MessageCode.ALREADY_BORROW);
+    }
+
+    public static AppException invalidDueDate() {
+        return new AppException(MessageCode.INVALID_DUE_DATE);
+    }
 }

@@ -7,6 +7,7 @@ import com.example.management.dto.response.borrowing.BorrowingDetailResponseDto;
 import com.example.management.service.BorrowingDetailService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
@@ -25,7 +26,7 @@ public class BorrowingController {
 
     @PostMapping("/borrow")
     @Operation(summary = "Tạo mới phiếu mượn sách", description = "API tạo phiếu mượn sách")
-    public ApiResponse<BorrowingDetailResponseDto> borrowBooks(@RequestBody BorrowingRequestDto requestDto) {
+    public ApiResponse<BorrowingDetailResponseDto> borrowBooks(@Valid @RequestBody BorrowingRequestDto requestDto) {
         return ApiResponse.success(MessageCode.BORROW_CREATED_SUCCESS, borrowingDetailService.borrowBooks(requestDto.getUserId(), requestDto.getBookIds(), requestDto.getDueDate()));
     }
 }
