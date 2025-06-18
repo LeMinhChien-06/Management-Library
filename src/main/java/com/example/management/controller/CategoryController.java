@@ -1,7 +1,7 @@
 package com.example.management.controller;
 
 import com.example.management.constants.MessageCode;
-import com.example.management.dto.request.Categories.CategoriesRequest;
+import com.example.management.dto.request.categories.CategoriesRequest;
 import com.example.management.dto.response.ApiResponse;
 import com.example.management.dto.response.categories.CategoriesResponse;
 import com.example.management.dto.response.categories.CategoryListResponse;

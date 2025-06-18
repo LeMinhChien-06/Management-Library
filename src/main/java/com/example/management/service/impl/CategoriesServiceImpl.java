@@ -1,7 +1,7 @@
 package com.example.management.service.impl;
 
 import com.example.management.annotation.TrackAction;
-import com.example.management.dto.request.Categories.CategoriesRequest;
+import com.example.management.dto.request.categories.CategoriesRequest;
 import com.example.management.dto.response.categories.CategoriesResponse;
 import com.example.management.dto.response.categories.CategoryListResponse;
 import com.example.management.entity.Categories;
@@ -11,9 +11,7 @@ import com.example.management.exception.categories.CategoryExceptions;
 import com.example.management.mapper.CategoryMapper;
 import com.example.management.repository.CategoriesRepository;
 import com.example.management.service.CategoriesService;
-import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

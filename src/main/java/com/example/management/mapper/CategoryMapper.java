@@ -1,6 +1,6 @@
 package com.example.management.mapper;
 
-import com.example.management.dto.request.Categories.CategoriesRequest;
+import com.example.management.dto.request.categories.CategoriesRequest;
 import com.example.management.dto.response.categories.CategoriesResponse;
 import com.example.management.dto.response.categories.CategoryListResponse;
 import com.example.management.entity.Categories;

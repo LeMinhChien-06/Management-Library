@@ -1,6 +1,6 @@
 package com.example.management.service;
 
-import com.example.management.dto.request.Categories.CategoriesRequest;
+import com.example.management.dto.request.categories.CategoriesRequest;
 import com.example.management.dto.response.categories.CategoriesResponse;
 import com.example.management.dto.response.categories.CategoryListResponse;
 

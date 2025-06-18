@@ -34,6 +34,9 @@ public enum MessageCode {
     BOOK_SEARCH_SUCCESS("MSG_BOOK_SEARCH_SUCCESS", "Tìm kiếm sách thành công", 200),
     BOOK_SEARCH_BY_CATEGORY_SUCCESS("MSG_BOOK_SEARCH_BY_CATEGORY_SUCCESS", "Tìm kiếm sách theo loại thành công", 200),
 
+    // BORROW SUCCESS MESSAGES (2xx)
+    BORROW_CREATED_SUCCESS("MSG_BOOK_CREATED_SUCCESS", "Tạo phiếu mượn sách thành công", 201),
+
     // LOGIN/AUTH SUCCESS MESSAGES (2xx)
     LOGIN_SUCCESS("MSG_LOGIN_SUCCESS", "Đăng nhập thành công", 200),
     LOGOUT_SUCCESS("MSG_LOGOUT_SUCCESS", "Đăng xuất thành công", 200),
@@ -112,6 +115,10 @@ public enum MessageCode {
     // BOOK
     BOOK_NOT_FOUND("ERR_BOOK_NOT_FOUND", "Sách không tồn tại", 404),
 
+    // BORROWING MƯỢN SÁCH ( 1000 - 1999)
+    BOOk_OUT_OF_STOCK("ERR_BOOK_OUT_OF_STOCK", "Sách hết hàng", 1001),
+    BORROW_BOOK_MAX("ERR_BORROW_BOOK_MAX", "Bạn chỉ được mượn tối đa 5 cuốn sách trong 1 phiếu!", 1002),
+
     // CONFLICT ERROR MESSAGES (409)
     CONFLICT("ERR_CONFLICT", "Dữ liệu đã tồn tại", 409),
     USER_ALREADY_EXISTS("ERR_USER_ALREADY_EXISTS", "Người dùng đã tồn tại", 409),
@@ -153,7 +160,6 @@ public enum MessageCode {
     // UNSUPPORTED OPERATIONS
     UNSUPPORTED_OPERATION("ERR_UNSUPPORTED_OPERATION", "Thao tác không được hỗ trợ", 405),
     METHOD_NOT_ALLOWED("ERR_METHOD_NOT_ALLOWED", "Phương thức không được phép", 405);
-
 
 
     private final String code;

@@ -6,9 +6,11 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Table(name = "borrowings")
+@Builder
 @Getter
 @Setter
 @NoArgsConstructor
@@ -24,10 +26,6 @@ public class Borrowing extends BaseEntity {
     @JoinColumn(name = "user_id", nullable = false)
     User user;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "book_id", nullable = false)
-    Book book;
-
     @Column(name = "borrow_date", nullable = false)
     LocalDate borrowDate; // Ngày mượn
 
@@ -42,6 +40,9 @@ public class Borrowing extends BaseEntity {
 
     @Column(columnDefinition = "TEXT")
     String notes;
+
+    @OneToMany(mappedBy = "borrowing", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<BorrowingDetail> borrowingDetails;
 
 
 }

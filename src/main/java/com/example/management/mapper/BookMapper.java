@@ -2,9 +2,12 @@ package com.example.management.mapper;
 
 import com.example.management.dto.request.books.BookCreateRequest;
 import com.example.management.dto.request.books.BookUpdateRequest;
+import com.example.management.dto.response.books.BookInfo;
 import com.example.management.dto.response.books.BookResponse;
 import com.example.management.dto.response.books.BookResponseDto;
+import com.example.management.dto.response.borrowing.BorrowingDetailResponseDto;
 import com.example.management.entity.Book;
+import com.example.management.entity.BorrowingDetail;
 import com.example.management.entity.Categories;
 import com.example.management.exception.categories.CategoryExceptions;
 import com.example.management.repository.CategoriesRepository;
@@ -88,5 +91,13 @@ public class BookMapper {
         return books.stream()
                 .map(this::toBookResponseDto)
                 .toList();
+    }
+
+    public BookInfo toBookInfo(Book book) {
+        return BookInfo.builder()
+                .bookId(book.getId())
+                .author(book.getAuthor())
+                .title(book.getTitle())
+                .build();
     }
 }

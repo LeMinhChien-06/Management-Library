@@ -1,4 +1,4 @@
-package com.example.management.dto.request.Categories;
+package com.example.management.dto.request.categories;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.AccessLevel;

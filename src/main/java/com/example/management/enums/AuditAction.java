@@ -15,6 +15,9 @@ public enum AuditAction {
     BOOK_VIEW("View Book"),
     BOOK_GET_BY_ID("Get Book By Id"),
 
+    // Borrow actions
+    BORROWING_CREATE("Create Borrowing"),
+
     // User actions
     USER_CREATE("Create User"),
     USER_UPDATE("Update User"),
