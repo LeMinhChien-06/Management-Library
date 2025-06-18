@@ -50,7 +50,7 @@ CREATE TABLE borrowings
     borrow_date DATE   NOT NULL,
     due_date    DATE   NOT NULL,
     return_date DATE,
-    status      ENUM('BORROWED', 'RETURNED', 'OVERDUE') DEFAULT 'BORROWED',
+    enum('PENDING','APPROVED','REJECTED') DEFAULT 'PENDING',
     notes       TEXT,
     created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -63,7 +63,7 @@ CREATE TABLE borrowing_details
     id           BIGINT AUTO_INCREMENT PRIMARY KEY,
     borrowing_id BIGINT NOT NULL,
     book_id      BIGINT NOT NULL,
-    status       ENUM('BORROWED', 'RETURNED') DEFAULT 'BORROWED',
+    status       ENUM('BORROWED', 'RETURNED', 'OVERDUE') DEFAULT 'BORROWED',
     FOREIGN KEY (borrowing_id) REFERENCES borrowings (id),
     FOREIGN KEY (book_id) REFERENCES books (id)
 );
