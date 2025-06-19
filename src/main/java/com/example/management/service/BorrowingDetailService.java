@@ -9,4 +9,8 @@ public interface BorrowingDetailService {
 
     BorrowingDetailResponseDto borrowBooks(Long userId, List<Long> bookIds, LocalDate dueDate);
 
+    BorrowingDetailResponseDto approveBorrowing(Long borrowingId, Boolean approved, String rejReason, List<Long> bookIds);
+
+
+    BorrowingDetailResponseDto rejectBorrowing(Long borrowingId, Boolean approved, String rejReason, List<Long> bookIds);
 }

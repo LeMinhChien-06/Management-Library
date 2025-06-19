@@ -16,7 +16,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("SELECT u FROM User u WHERE u.id = :id AND u.active = true")
     Optional<User> findByIdAndActive(@Param("id") Long id);
 
-
     Optional<User> findByUsername(String username);
 
     boolean existsByUsername(String username);

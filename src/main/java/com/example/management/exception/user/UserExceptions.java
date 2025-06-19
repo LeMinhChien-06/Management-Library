@@ -49,5 +49,8 @@ public class UserExceptions {
         return new AppException(MessageCode.PASSWORD_INVALID);
     }
 
+    public static AppException permissionDenied() {
+        return new AppException(MessageCode.PERMISSION_DENIED);
+    }
 
 }

@@ -24,4 +24,12 @@ public class BorrowingExceptions {
     public static AppException invalidDueDate() {
         return new AppException(MessageCode.INVALID_DUE_DATE);
     }
+
+    public static AppException invalidStatus() {
+        return new AppException(MessageCode.INVALID_STATUS);
+    }
+
+    public static AppException borrowingNotFound() {
+        return new AppException(MessageCode.BORROW_NOT_FOUND);
+    }
 }

@@ -18,6 +18,12 @@ public enum AuditAction {
     // Borrow actions
     BORROWING_CREATE("Create Borrowing"),
 
+    PENDING_BORROWING("Pending Borrowing"),
+    APPROVED_BORROWING("Approved Borrowing"),
+    REJECTED_BORROWING("Rejected Borrowing"),
+    RETURNED_BORROWING("Returned Borrowing"),
+    OVERDUE_BORROWING("Overdue Borrowing"),
+
     // User actions
     USER_CREATE("Create User"),
     USER_UPDATE("Update User"),

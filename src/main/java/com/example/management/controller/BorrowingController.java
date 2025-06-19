@@ -1,7 +1,9 @@
 package com.example.management.controller;
 
 import com.example.management.constants.MessageCode;
+import com.example.management.dto.request.borrowing.ApproveRequest;
 import com.example.management.dto.request.borrowing.BorrowingRequestDto;
+import com.example.management.dto.request.borrowing.RejectRequest;
 import com.example.management.dto.response.ApiResponse;
 import com.example.management.dto.response.borrowing.BorrowingDetailResponseDto;
 import com.example.management.service.BorrowingDetailService;
@@ -28,5 +30,17 @@ public class BorrowingController {
     @Operation(summary = "Tạo mới phiếu mượn sách", description = "API tạo phiếu mượn sách")
     public ApiResponse<BorrowingDetailResponseDto> borrowBooks(@Valid @RequestBody BorrowingRequestDto requestDto) {
         return ApiResponse.success(MessageCode.BORROW_CREATED_SUCCESS, borrowingDetailService.borrowBooks(requestDto.getUserId(), requestDto.getBookIds(), requestDto.getDueDate()));
+    }
+
+    @PostMapping("/{id}/approve")
+    @Operation(summary = "Duyệt mượn sách", description = "API duyệt yêu cầu mượn sách của người dùng")
+    public ApiResponse<BorrowingDetailResponseDto> approveBorrowing(@PathVariable Long id, @RequestBody ApproveRequest request) {
+        return ApiResponse.success(MessageCode.APPROVE_SUCCESS, borrowingDetailService.approveBorrowing(id, true, null, request.getBookIds()));
+    }
+
+    @PostMapping("/{id}/reject")
+    @Operation(summary = "Từ chối mượn sách", description = "API từ chối yêu cầu mượn sách của người dùng")
+    public ApiResponse<BorrowingDetailResponseDto> rejectBorrowing(@PathVariable Long id, @RequestBody RejectRequest request) {
+        return ApiResponse.success(MessageCode.REJECT_SUCCESS, borrowingDetailService.rejectBorrowing(id, false, request.getRejectReason(), null));
     }
 }

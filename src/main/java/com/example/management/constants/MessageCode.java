@@ -7,6 +7,8 @@ public enum MessageCode {
 
     // SUCCESS MESSAGES (2xx)
     SUCCESS("MSG_SUCCESS", "Thành công", 200),
+    APPROVE_SUCCESS("MSG_SUCCESS", "Duyệt thành công", 200),
+    REJECT_SUCCESS("MSG_SUCCESS", "Từ chối thành công", 200),
     CREATED_SUCCESS("MSG_CREATED_SUCCESS", "Tạo mới thành công", 201),
     UPDATED_SUCCESS("MSG_UPDATED_SUCCESS", "Cập nhật thành công", 200),
     DELETED_SUCCESS("MSG_DELETED_SUCCESS", "Xóa thành công", 200),
@@ -116,11 +118,13 @@ public enum MessageCode {
     BOOK_NOT_FOUND("ERR_BOOK_NOT_FOUND", "Sách không tồn tại", 404),
 
     // BORROWING MƯỢN SÁCH
+    BORROW_NOT_FOUND("ERR_BORROW_NOT_FOUND", "Không tìm thấy phiếu mượn", 404),
     BOOk_OUT_OF_STOCK("ERR_BOOK_OUT_OF_STOCK", "Sách hết hàng", 400),
     BORROW_BOOK_MAX("ERR_BORROW_BOOK_MAX", "Bạn chỉ được mượn tối đa 5 cuốn sách trong 1 phiếu!", 400),
     MAX_BORROW_LIMIT("ERR_MAX_BORROW_LIMIT", "Đã vượt quá giới hạn mượn sách", 400),
     ALREADY_BORROW("ERR_ALREADY_BORROW", "Bạn đã mượn sách này rồi", 400),
     INVALID_DUE_DATE("ERR_INVALID_DUE_DATE", "Ngày trả sách không vượt quá 30 ngày từ khi mượn sách", 400),
+    INVALID_STATUS("ERR_INVALID_STATUS", "trạng thái không hợp lệ", 400),
     REQUIRED_DUE_DATE("ERR_REQUIRED_DUE_DATE", "Ngày trả không được để trống", 400),
 
     // CONFLICT ERROR MESSAGES (409)

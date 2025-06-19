@@ -1,6 +1,7 @@
 package com.example.management.dto.response.borrowing;
 
 import com.example.management.dto.response.books.BookInfo;
+import com.example.management.enums.Status;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Data;
@@ -19,6 +20,8 @@ public class BorrowingDetailResponseDto {
     Long userId;
 
     String userFullName;
+
+    Status status;
 
     LocalDate dueDate;
 

@@ -36,12 +36,12 @@ public class Borrowing extends BaseEntity {
     LocalDate returnDate; // Ngày trả
 
     @Enumerated(EnumType.STRING)
-    Status status = Status.BORROWED;
+    Status status;
 
     @Column(columnDefinition = "TEXT")
     String notes;
 
-    @OneToMany(mappedBy = "borrowing", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "borrowing", cascade = CascadeType.ALL)
     List<BorrowingDetail> borrowingDetails;
 
 
