@@ -38,6 +38,7 @@ public enum MessageCode {
 
     // BORROW SUCCESS MESSAGES (2xx)
     BORROW_CREATED_SUCCESS("MSG_BOOK_CREATED_SUCCESS", "Tạo phiếu mượn sách thành công", 201),
+    RETURN_BOOK_SUCCESS("MSG_RETURN_BOOK_SUCCESS", "Trả sách thành công", 200),
 
     // LOGIN/AUTH SUCCESS MESSAGES (2xx)
     LOGIN_SUCCESS("MSG_LOGIN_SUCCESS", "Đăng nhập thành công", 200),
@@ -126,6 +127,7 @@ public enum MessageCode {
     INVALID_DUE_DATE("ERR_INVALID_DUE_DATE", "Ngày trả sách không vượt quá 30 ngày từ khi mượn sách", 400),
     INVALID_STATUS("ERR_INVALID_STATUS", "trạng thái không hợp lệ", 400),
     REQUIRED_DUE_DATE("ERR_REQUIRED_DUE_DATE", "Ngày trả không được để trống", 400),
+    NO_BOOK_RETURN("ERR_NO_BOOK_RETURN", "Không có sách nào để trả", 400),
 
     // CONFLICT ERROR MESSAGES (409)
     CONFLICT("ERR_CONFLICT", "Dữ liệu đã tồn tại", 409),

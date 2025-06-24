@@ -4,14 +4,20 @@ import com.example.management.constants.MessageCode;
 import com.example.management.dto.request.borrowing.ApproveRequest;
 import com.example.management.dto.request.borrowing.BorrowingRequestDto;
 import com.example.management.dto.request.borrowing.RejectRequest;
+import com.example.management.dto.request.borrowing.ReturnBookRequest;
 import com.example.management.dto.response.ApiResponse;
 import com.example.management.dto.response.borrowing.BorrowingDetailResponseDto;
+import com.example.management.dto.response.borrowing.ReturnBooksResponse;
 import com.example.management.service.BorrowingDetailService;
+import com.example.management.service.BorrowingService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -24,7 +30,18 @@ import java.util.List;
 public class BorrowingController {
 
     private final BorrowingDetailService borrowingDetailService;
+    private final BorrowingService borrowingService;
 
+    @PutMapping("/{borrowingId}/return")
+//    @PreAuthorize("hasAnyRole('LIBRARIAN', 'ADMIN')")
+    @Operation(summary = "Trả sách", description = "Trả tất cả các sách theo phiếu mượn")
+    public ApiResponse<ReturnBooksResponse> returnBooks(
+            @Parameter(description = "Borrowing ID") @PathVariable Long borrowingId,
+            @Valid @RequestBody ReturnBookRequest request) {
+
+
+        return ApiResponse.success(MessageCode.RETURN_BOOK_SUCCESS, borrowingService.returnBooks(borrowingId, request));
+    }
 
     @PostMapping("/borrow")
     @Operation(summary = "Tạo mới phiếu mượn sách", description = "API tạo phiếu mượn sách")

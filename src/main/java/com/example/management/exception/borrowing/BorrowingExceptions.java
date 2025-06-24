@@ -32,4 +32,8 @@ public class BorrowingExceptions {
     public static AppException borrowingNotFound() {
         return new AppException(MessageCode.BORROW_NOT_FOUND);
     }
+
+    public static AppException noBooksToReturn() {
+        return new AppException(MessageCode.BORROW_NOT_FOUND);
+    }
 }

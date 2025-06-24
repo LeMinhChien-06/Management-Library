@@ -50,7 +50,7 @@ CREATE TABLE borrowings
     borrow_date DATE   NOT NULL,
     due_date    DATE   NOT NULL,
     return_date DATE,
-    enum('PENDING','APPROVED','REJECTED') DEFAULT 'PENDING',
+    status enum('PENDING','APPROVED','REJECTED') DEFAULT 'PENDING',
     notes       TEXT,
     created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
