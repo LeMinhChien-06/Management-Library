@@ -1,0 +1,25 @@
+spring:
+  config:
+    activate:
+      on-profile: test
+  datasource:
+    url: "jdbc:mysql://localhost:3306/management_library" # DB riêng cho test
+    username: root
+    password: 12345678
+  jpa:
+    hibernate:
+      ddl-auto: none
+
+server:
+  port: 8081
+
+open:
+  api:
+    serverUrl: http://localhost:${server.port}/api
+
+# Cấu hình logging cho test
+logging:
+  level:
+    root: WARN
+    org.springframework.test: INFO
+    com.example.management: DEBUG

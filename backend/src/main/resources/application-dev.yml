@@ -1,0 +1,53 @@
+spring:
+  config:
+    activate:
+      on-profile: dev
+  datasource:
+    url: "jdbc:mysql://localhost:3306/management_library"
+    username: root
+    password: 12345678
+  jpa:
+    hibernate:
+      ddl-auto: none
+
+  # File upload configuration
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+
+jwt:
+  signerKey: "JRuSzhqIwpOXPL/C8O+4tsXdcYr8TCAm7i99Bq59Qbe5I6yOCJo5LUSUcSfKNoaQ"
+  valid-duration: 10000
+
+server:
+  port: 8080
+
+# QR Code configuration
+app:
+  qrStoragePath: uploads/qr-codes
+  qrBaseUrl: http://localhost:8080/api/files/qr
+  qrImageSize: 150
+
+minio:
+  endpoint: "http://localhost:9000"
+  access-key: admin1
+  secret-key: admin123
+  bucket-name: bucket-admin
+
+open:
+  api:
+    serverUrl: http://localhost:${server.port}/api
+
+# Cấu hình logging cho dev
+logging:
+  pattern:
+    console: "%clr(%d{dd/MM/yyyy HH:mm:ss}){faint} %clr(%5p) %clr(${PID:- }){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n%wEx"
+    file: "%d{dd/MM/yyyy HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+  file:
+    name: logs/application.log
+  level:
+    root: INFO
+    com.example.management: INFO
+    org.springframework.web: INFO
+    org.hibernate: INFO

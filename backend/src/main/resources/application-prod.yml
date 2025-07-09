@@ -1,0 +1,35 @@
+spring:
+  config:
+    activate:
+      on-profile: prod
+  datasource:
+    url: "jdbc:mysql://production-db-host:3306/management_library_prod"
+    username: ${DB_USERNAME} # Sử dụng biến môi trường cho bảo mật
+    password: ${DB_PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: false
+
+server:
+  port: 8082
+
+open:
+  api:
+    serverUrl: https://api.yourproduction.com
+
+# tắt swagger trong môi trường prod
+springdoc:
+  api-docs:
+    enabled: false
+  swagger-ui:
+    enabled: false
+
+# Cấu hình logging cho prod
+logging:
+  level:
+    root: WARN
+    org.springframework: ERROR
+    com.example.management: INFO
+  file:
+    name: /var/logs/application.log
